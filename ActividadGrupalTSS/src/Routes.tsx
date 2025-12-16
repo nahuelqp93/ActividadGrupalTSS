@@ -5,7 +5,7 @@ import Simulacion from "./modules/simulacion/Simulacion.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 // Importamos las distribuciones
-import TriangularDistribution from "./core/distributions/Distribuciones.tsx"; // Usa el LCG que hicimos antes
+import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./core/distributions/PoissonDistribution.tsx";
 import ExponentialDistribution from "./core/distributions/ExponentialDistribution.tsx";
 import BernoullyDistribution from "./core/distributions/BernoullyDistribution.tsx";
@@ -18,7 +18,7 @@ export default function AppRoutes() {
       <Route path="/conceptos" element={<Conceptos />} />
       
       {/* Rutas Específicas para Distribuciones */}
-      <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution />} />
+      <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution onCerrar={() => {}} />} />
 
       <Route path="/distribuciones/discretas/poisson" element={<PoissonDistribution />} />
 
