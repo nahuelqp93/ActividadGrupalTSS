@@ -5,7 +5,7 @@ import Simulacion from "./modules/simulacion/Simulacion.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 // Importamos las distribuciones
-import TriangularDistribution from "./modules/distribuciones/TriangularDistribution.tsx"; // Usa el LCG que hicimos antes
+import TriangularDistribution from "./modules/distribuciones/Distribuciones.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./modules/distribuciones/PoissonDistribution.tsx";
 
 import BernoullyDistribution from "./modules/distribuciones/BernoullyDistribution.tsx";
