@@ -7,7 +7,7 @@ import Ayuda from "./pages/Ayuda.tsx";
 // Importamos las distribuciones
 import TriangularDistribution from "./modules/distribuciones/Distribuciones.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./modules/distribuciones/PoissonDistribution.tsx";
-
+import ExponentialDistribution from "./modules/distribuciones/ExponentialLCG.tsx";
 import BernoullyDistribution from "./modules/distribuciones/BernoullyDistribution.tsx";
 import UniformLCG from "./modules/distribuciones/UniformLCG.tsx";
 
@@ -24,7 +24,9 @@ export default function AppRoutes() {
 
       <Route path="/distribuciones/discretas/bernoulli" element={<BernoullyDistribution />} />
 
-      <Route path="/distribuciones/continuas/uniforme-lcg" element={<UniformLCG />} />
+      <Route path="/distribuciones/continuas/uniforme" element={<UniformLCG />} />
+
+      <Route path="/distribuciones/continuas/exponencial" element={<ExponentialDistribution />} />
       
       <Route path="/simulacion" element={<Simulacion />} />
       <Route path="/ayuda" element={<Ayuda />} />
