@@ -11,6 +11,8 @@ import PoissonDistribution from "./modules/distribuciones/PoissonDistribution.ts
 import BernoullyDistribution from "./modules/distribuciones/BernoullyDistribution.tsx";
 import UniformLCG from "./modules/distribuciones/UniformLCG.tsx";
 
+import TransformadaInversa from "./modules/simulacion/TransformadaInversa.tsx";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -26,6 +28,8 @@ export default function AppRoutes() {
 
       <Route path="/distribuciones/continuas/uniforme-lcg" element={<UniformLCG />} />
       
+      <Route path="/transformada-inversa" element={<TransformadaInversa />} />
+
       <Route path="/simulacion" element={<Simulacion />} />
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
