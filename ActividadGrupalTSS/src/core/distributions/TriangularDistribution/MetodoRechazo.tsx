@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { evaluate } from 'mathjs';
-import GenerarMuestras from '../../modules/distribuciones/GenerarMuestras.tsx';
+import GenerarMuestras from '../../../modules/distribuciones/GenerarMuestras.tsx';
 
 export default function Distribuciones() {
   const [ecuacion1, setEcuacion1] = useState('x/400 - 19/40');
