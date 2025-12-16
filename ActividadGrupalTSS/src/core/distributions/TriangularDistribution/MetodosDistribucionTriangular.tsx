@@ -12,7 +12,7 @@ export default function MetodosDistribuciones({ onCerrar }: MetodosDistribucione
 
   const metodos = [
     { num: 1, nombre: 'Rechazo', color: 'blue' },
-    { num: 2, nombre: 'Composición', color: 'purple' },
+    { num: 2, nombre: 'Composición', color: 'blue' },
     { num: 3, nombre: 'Transformada Inversa', color: 'green' }
   ];
 
