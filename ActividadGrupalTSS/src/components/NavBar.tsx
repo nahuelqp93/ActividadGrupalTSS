@@ -81,7 +81,7 @@ export default function NavBar() {
               <li>
                 <Link to="/distribuciones/continuas/uniforme" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/uniforme-lcg") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <TrendingUp size={16} />
-                  Uniforme LCG
+                  Uniforme
                 </Link>
               </li>
               <li>

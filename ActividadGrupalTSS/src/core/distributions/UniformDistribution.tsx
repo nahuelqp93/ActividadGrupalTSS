@@ -14,7 +14,7 @@ import {
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 
-import { useLCG } from "../../core/random/useLCG";
+import { useLCG } from "../random/useLCG";
 
 ChartJS.register(
   CategoryScale,
@@ -26,32 +26,34 @@ ChartJS.register(
   Legend
 );
 
-interface ExponentialRow {
+interface UniformRow {
   u: number;
   x: number;
 }
 
-// Transformada inversa
-function exponentialSample(
-  lambda: number,
+// Transformada directa
+function uniformSample(
+  a: number,
+  b: number,
   nextU: () => number
-): ExponentialRow {
+): UniformRow {
   const u = nextU();
-  const x = -Math.log(1 - u) / lambda;
+  const x = a + (b - a) * u;
   return { u, x };
 }
 
 // PDF teórica
-function exponentialPDF(x: number, lambda: number): number {
-  return x >= 0 ? lambda * Math.exp(-lambda * x) : 0;
+function uniformPDF(x: number, a: number, b: number): number {
+  return x >= a && x <= b ? 1 / (b - a) : 0;
 }
 
-const ExponentialLCG: React.FC = () => {
-  const [lambda, setLambda] = useState(1);
+const UniformLCG: React.FC = () => {
+  const [a, setA] = useState(0);
+  const [b, setB] = useState(10);
   const [n, setN] = useState(1000);
 
   const [samples, setSamples] = useState<number[]>([]);
-  const [rawData, setRawData] = useState<ExponentialRow[]>([]);
+  const [rawData, setRawData] = useState<UniformRow[]>([]);
 
   const rng = useLCG({
     seed: 1234,
@@ -60,16 +62,16 @@ const ExponentialLCG: React.FC = () => {
     m: 2 ** 32
   });
 
-  const isValid = lambda > 0;
+  const isValid = a < b;
 
   const generate = () => {
     if (!isValid) return;
 
     rng.reseed(1234);
 
-    const data: ExponentialRow[] = [];
+    const data: UniformRow[] = [];
     for (let i = 0; i < n; i++) {
-      data.push(exponentialSample(lambda, rng.next));
+      data.push(uniformSample(a, b, rng.next));
     }
 
     setRawData(data);
@@ -78,36 +80,34 @@ const ExponentialLCG: React.FC = () => {
 
   const stats = useMemo(() => {
     if (samples.length === 0) return null;
-
     const meanEmp = samples.reduce((s, x) => s + x, 0) / samples.length;
     const varEmp =
       samples.reduce((s, x) => s + (x - meanEmp) ** 2, 0) / samples.length;
 
-    const meanTheo = 1 / lambda;
-    const varTheo = 1 / (lambda * lambda);
+    const meanTheo = (a + b) / 2;
+    const varTheo = (b - a) ** 2 / 12;
 
     return { meanEmp, varEmp, meanTheo, varTheo };
-  }, [samples, lambda]);
+  }, [samples, a, b]);
 
   const chartData = useMemo(() => {
     if (samples.length === 0) return { labels: [], datasets: [] };
 
-    const maxX = Math.max(...samples);
     const bins = 30;
-    const width = maxX / bins;
+    const width = (b - a) / bins;
 
     const hist = new Array(bins).fill(0);
     samples.forEach(x => {
-      const idx = Math.floor(x / width);
+      const idx = Math.floor((x - a) / width);
       if (idx >= 0 && idx < bins) hist[idx]++;
     });
 
     const labels = hist.map((_, i) =>
-      (i * width + width / 2).toFixed(2)
+      (a + i * width + width / 2).toFixed(2)
     );
 
     const theoretical = labels.map(label =>
-      exponentialPDF(parseFloat(label), lambda) * n * width
+      uniformPDF(parseFloat(label), a, b) * n * width
     );
 
     return {
@@ -129,33 +129,49 @@ const ExponentialLCG: React.FC = () => {
         }
       ]
     };
-  }, [samples, lambda, n]);
+  }, [samples, a, b, n]);
 
   return (
     <div className="max-w-5xl mx-auto p-8 space-y-8">
 
       <div>
         <h1 className="text-3xl font-bold mb-2">
-          Distribución Exponencial
+          Distribución Uniforme Continua
         </h1>
         <p className="text-gray-600">
-          Modelo continuo para tiempos de espera, generado mediante
-          <b> Generador Congruencial Mixto</b> y transformada inversa.
+          Generación de variables aleatorias continuas mediante
+          <b> Generador Congruencial Mixto</b> y transformación lineal.
         </p>
       </div>
 
-      <BlockMath math="f(x)=\lambda e^{-\lambda x}, \quad x \ge 0" />
-      <BlockMath math="X = -\frac{1}{\lambda}\ln(1-U)" />
+      <BlockMath math={`
+f(x)=
+\\begin{cases}
+\\dfrac{1}{b-a}, & a \\le x \\le b \\\\
+0, & \\text{otro caso}
+\\end{cases}
+      `} />
+
+      <BlockMath math="X = a + (b-a)U" />
 
       {/* CONTROLES */}
       <div className="flex gap-4 items-end">
         <label>
-          <span className="font-bold">λ:</span>
+          <span className="font-bold">a:</span>
           <input
             type="number"
-            step="0.1"
-            value={lambda}
-            onChange={e => setLambda(+e.target.value)}
+            value={a}
+            onChange={e => setA(+e.target.value)}
+            className="ml-2 p-2 border rounded w-24"
+          />
+        </label>
+
+        <label>
+          <span className="font-bold">b:</span>
+          <input
+            type="number"
+            value={b}
+            onChange={e => setB(+e.target.value)}
             className="ml-2 p-2 border rounded w-24"
           />
         </label>
@@ -180,25 +196,21 @@ const ExponentialLCG: React.FC = () => {
 
       {!isValid && (
         <p className="text-red-600 font-bold">
-          Error: <InlineMath math="\lambda > 0" />
+          Error: debe cumplirse <InlineMath math="a < b" />
         </p>
       )}
 
-      {samples.length > 0 && stats && (
+      {samples.length > 0 && (
         <>
           <p>
-            Media teórica: {stats.meanTheo.toFixed(4)} <br />
-            Media simulada: <b>{stats.meanEmp.toFixed(4)}</b> <br />
-            Varianza teórica: {stats.varTheo.toFixed(4)} <br />
-            Varianza simulada: <b>{stats.varEmp.toFixed(4)}</b>
+             Media teórica: {stats?.meanTheo.toFixed(4)} <br />
+            Media simulada: <b>{stats?.meanEmp.toFixed(4)}</b> <br />
+            Varianza teórica: {stats?.varTheo.toFixed(4)} <br />
+            Varianza simulada: <b>{stats?.varEmp.toFixed(4)}</b>
           </p>
 
           <div className="h-64">
-            <Chart
-              type="bar"
-              data={chartData}
-              options={{ maintainAspectRatio: false }}
-            />
+            <Chart type="bar" data={chartData} options={{ maintainAspectRatio: false }} />
           </div>
 
           {/* TABLA */}
@@ -242,4 +254,4 @@ const ExponentialLCG: React.FC = () => {
   );
 };
 
-export default ExponentialLCG;
+export default UniformLCG;

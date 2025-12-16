@@ -1,6 +1,9 @@
-﻿import { useState } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { evaluate } from 'mathjs';
-import GraficoHistograma from './GraficoHistograma';
+import { rejectionMethod } from '../../core/methods/rechazo';
+import type { SamplePoint } from '../../core/types/Sample';
+import SampleTable from '../../components/common/SampleTable';
+import SamplePlot from '../../components/common/SamplePlot';
 
 interface GenerarMuestrasProps {
   ecuacion1: string;
@@ -10,16 +13,6 @@ interface GenerarMuestrasProps {
   limiteInf2: number;
   limiteSupf2: number;
   onCerrar: () => void;
-}
-
-interface Muestra {
-  simulacion: number;
-  r1: number;
-  r2: number;
-  x: number;
-  fx: number;
-  fmax: number;
-  estado: string;
 }
 
 export default function GenerarMuestras({
@@ -32,26 +25,40 @@ export default function GenerarMuestras({
   onCerrar,
 }: GenerarMuestrasProps) {
   const [numSimulaciones, setNumSimulaciones] = useState('10');
-  const [muestras, setMuestras] = useState<Muestra[]>([]);
+  const [muestras, setMuestras] = useState<SamplePoint[]>([]);
   const [mostrarGrafico, setMostrarGrafico] = useState(false);
+  const [seed, setSeed] = useState(1234);
 
-  const evaluarFuncion = (ecuacion: string, x: number): number | null => {
+  // LCG simple integrado
+  const createLCG = (initialSeed: number) => {
+    let current = initialSeed;
+    const a = 1664525;
+    const c = 1013904223;
+    const m = Math.pow(2, 32);
+
+    return () => {
+      current = (a * current + c) % m;
+      return current / m;
+    };
+  };
+
+  const evaluarFuncion = (ecuacion: string, x: number): number => {
     try {
       const resultado = evaluate(ecuacion, { x });
-      return typeof resultado === 'number' ? resultado : null;
+      return typeof resultado === 'number' ? resultado : 0;
     } catch (e) {
-      return null;
+      return 0;
     }
   };
 
-  const calcularMaxY = (limInf: number,limSup:number, ecuacion: string): number => {
+  const calcularMaxY = (limInf: number, limSup: number, ecuacion: string): number => {
     let maxY = 0;
     const numSamples = 100;
     
     for (let i = 0; i <= numSamples; i++) {
       const x = limInf + (limSup - limInf) * (i / numSamples);
       const y = evaluarFuncion(ecuacion, x);
-      if (y !== null && isFinite(y) && y > maxY) {
+      if (isFinite(y) && y > maxY) {
         maxY = y;
       }
     }
@@ -59,60 +66,61 @@ export default function GenerarMuestras({
     return maxY;
   };
 
-
+  // PDF unificada
+  const pdf = useMemo(() => {
+    return (x: number): number => {
+      if (x < limiteSupf1) {
+        return evaluarFuncion(ecuacion1, x);
+      }
+      if (x <= limiteSupf2) {
+        return evaluarFuncion(ecuacion2, x);
+      }
+      return 0;
+    };
+  }, [ecuacion1, ecuacion2, limiteSupf1, limiteSupf2]);
 
   const generarMuestras = () => {
-    const numSims = parseInt(numSimulaciones) || 10;
+    const n = parseInt(numSimulaciones) || 10;
+    
     const maxY1 = calcularMaxY(limiteInf1, limiteSupf1, ecuacion1);
     const maxY2 = calcularMaxY(limiteInf2, limiteSupf2, ecuacion2);
-    if (maxY1 > maxY2) {
-      var maxY = 1/maxY1;
-    } else {
-      var maxY = 1/maxY2;
-    }
-    const nuevasMuestras: Muestra[] = [];
+    const fmax = Math.max(maxY1, maxY2);
 
-    for (let i = 1; i <= numSims; i++) {
-      const r1 = Math.random();
-      const r2 = Math.random();
-      const x = limiteInf1 + (limiteSupf2 - limiteInf1) * r1;
-      
-      let estado = 'Rechazado';
-      let fxValue = 0;
-      
-      if (x < limiteSupf1) {
-        const fx = evaluarFuncion(ecuacion1, x);
-        fxValue = fx !== null ? fx : 0;
-        if (fx !== null && r2 <= fx * maxY) {
-          estado = 'Aceptado';
-        }
-      } else {
-        if (x < limiteSupf2) {
-          const fx = evaluarFuncion(ecuacion2, x);
-          fxValue = fx !== null ? fx : 0;
-          if (fx !== null && r2 <= fx * maxY) {
-            estado = 'Aceptado';
-          }
-        }
-      }
+    const rng = createLCG(seed);
 
-      nuevasMuestras.push({
-        simulacion: i,
-        r1: parseFloat(r1.toFixed(6)),
-        r2: parseFloat(r2.toFixed(6)),
-        x: parseFloat(x.toFixed(6)),
-        fx: parseFloat(fxValue.toFixed(6)),
-        fmax: parseFloat(maxY.toFixed(6)),
-        estado
-      });
-    }
+    const samples = rejectionMethod({
+      n,
+      nextU: rng,
+      xmin: limiteInf1,
+      xmax: limiteSupf2,
+      pdf,
+      fmax
+    });
 
-    setMuestras(nuevasMuestras);
+    setMuestras(samples);
   };
+
+  const curves = useMemo(() => [
+    {
+      xmin: limiteInf1,
+      xmax: limiteSupf1,
+      pdf: (x: number) => evaluarFuncion(ecuacion1, x),
+      color: '#3b82f6',
+      label: 'Función 1'
+    },
+    {
+      xmin: limiteInf2,
+      xmax: limiteSupf2,
+      pdf: (x: number) => evaluarFuncion(ecuacion2, x),
+      color: '#ef4444',
+      label: 'Función 2'
+    }
+  ], [ecuacion1, ecuacion2, limiteInf1, limiteSupf1, limiteInf2, limiteSupf2]);
+
   return (
     <div className="bg-gray-50 rounded-lg shadow-lg p-6 border-2 border-blue-200">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-blue-800">Generador de Muestras</h2>
+        <h2 className="text-2xl font-bold text-blue-800">Generador de Muestras - Método del Rechazo</h2>
         <button
           onClick={onCerrar}
           className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
@@ -121,6 +129,7 @@ export default function GenerarMuestras({
         </button>
       </div>
 
+      {/* Parámetros */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4 text-blue-800">
           Parámetros de las Funciones
@@ -143,10 +152,11 @@ export default function GenerarMuestras({
         </div>
       </div>
 
+      {/* Controles */}
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-lg font-bold mb-4">Método del Rechazo</h3>
+        <h3 className="text-lg font-bold mb-4">Configuración</h3>
         
-        <div className="mb-4 flex items-center gap-4">
+        <div className="mb-4 flex items-center gap-4 flex-wrap">
           <div>
             <label className="block text-sm font-medium mb-2">
               Número de Simulaciones
@@ -161,9 +171,22 @@ export default function GenerarMuestras({
                 }
               }}
               placeholder="10"
-              className="p-2 border border-gray-300 rounded-md focus:outline-none"
+              className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Semilla (Seed)
+            </label>
+            <input
+              type="number"
+              value={seed}
+              onChange={(e) => setSeed(parseInt(e.target.value) || 1234)}
+              className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div className="mt-6 flex gap-3">
             <button
               onClick={generarMuestras}
@@ -174,80 +197,42 @@ export default function GenerarMuestras({
             <button
               onClick={() => setMostrarGrafico(!mostrarGrafico)}
               className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+              disabled={muestras.length === 0}
             >
-              {mostrarGrafico ? 'Ocultar Puntos' : 'Graficar Puntos'}
+              {mostrarGrafico ? 'Ocultar Gráfico' : 'Mostrar Gráfico'}
             </button>
           </div>
         </div>
 
+        {/* Gráfico */}
         {mostrarGrafico && muestras.length > 0 && (
           <div className="mt-6">
-            <GraficoHistograma 
-              muestras={muestras}
-              ecuacion1={ecuacion1}
-              ecuacion2={ecuacion2}
-              limiteInf1={limiteInf1}
-              limiteSupf1={limiteSupf1}
-              limiteInf2={limiteInf2}
-              limiteSupf2={limiteSupf2}
+            <SamplePlot
+              samples={muestras}
+              curves={curves}
+              title="Método del Rechazo - Visualización"
             />
           </div>
         )}
 
+        {/* Tabla */}
         {muestras.length > 0 && (
-          <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full border-collapse border border-gray-300">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="border border-gray-300 px-4 py-2 text-left">Simulación</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">R1</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">R2</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">X</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">f(x)</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">C</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {muestras.map((muestra) => (
-                  <tr key={muestra.simulacion} className="hover:bg-gray-50">
-                    <td className="border border-gray-300 px-4 py-2">{muestra.simulacion}</td>
-                    <td className="border border-gray-300 px-4 py-2">{muestra.r1}</td>
-                    <td className="border border-gray-300 px-4 py-2">{muestra.r2}</td>
-                    <td className="border border-gray-300 px-4 py-2">{muestra.x}</td>
-                    <td className="border border-gray-300 px-4 py-2">{muestra.fx}</td>
-                    <td className="border border-gray-300 px-4 py-2">{muestra.fmax}</td>
-                    <td className={`border border-gray-300 px-4 py-2 font-semibold ${
-                      muestra.estado === 'Aceptado' ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {muestra.estado}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm">
-                <strong>Total muestras:</strong> {muestras.length}  
-                <strong className="ml-4 text-green-600">Aceptadas:</strong> {muestras.filter(m => m.estado === 'Aceptado').length} 
-                <strong className="ml-4 text-red-600">Rechazadas:</strong> {muestras.filter(m => m.estado === 'Rechazado').length}
-              </p>
-              <p className="text-sm mt-2">
-                <strong>Tasa de aceptación:</strong> {((muestras.filter(m => m.estado === 'Aceptado').length / muestras.length) * 100).toFixed(2)}%
-              </p>
-              <div className="mt-3 pt-3 border-t border-blue-200">
-                <p className="text-sm font-semibold mb-1">Formula para calcular X:</p>
-                <p className="text-sm font-mono bg-white px-3 py-2 rounded">
-                  x = {limiteInf1} + ({limiteSupf2} - {limiteInf1}) × R1
-                </p>
-                <p className="text-sm font-semibold mb-1 mt-3">Formula de Factor de Escala:</p>
-                <p className="text-sm font-mono bg-white px-3 py-2 rounded">
-                  C = 1 / fmax
-                </p>
-              </div>
-            </div>
-          </div>
+          <SampleTable
+            samples={muestras}
+            columns={{
+              i: true,
+              u: true,
+              u2: true,
+              x: true,
+              y: true,
+              fx: true,
+              accepted: true
+            }}
+            showFormulas={{
+              xFormula: `x = ${limiteInf1} + (${limiteSupf2} - ${limiteInf1}) × U₁`,
+              cFormula: `C = 1 / fmax`
+            }}
+          />
         )}
       </div>
     </div>
