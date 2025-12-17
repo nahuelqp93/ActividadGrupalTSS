@@ -246,6 +246,70 @@ export default function GenerarMuestras({
                 <p className="text-sm font-mono bg-white px-3 py-2 rounded">
                   C = 1 / fmax
                 </p>
+
+                {muestras.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-blue-300">
+                    <h4 className="text-sm font-bold mb-3 text-blue-700">Pasos del Metodo del Rechazo (Simulacion 1)</h4>
+                    
+                    <div className="space-y-3">
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="text-sm font-semibold text-blue-600 mb-2">Paso 1: Generar numeros aleatorios</p>
+                        <div className="text-sm font-mono bg-gray-50 px-3 py-2 rounded">
+                          <p>R1 = {muestras[0].r1}</p>
+                          <p>R2 = {muestras[0].r2}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="text-sm font-semibold text-blue-600 mb-2">Paso 2: Calcular X</p>
+                        <div className="text-sm bg-gray-50 px-3 py-2 rounded space-y-1">
+                          <p className="font-mono">X = {limiteInf1} + ({limiteSupf2} - {limiteInf1}) × {muestras[0].r1}</p>
+                          <p className="font-mono">X = {limiteInf1} + ({limiteSupf2 - limiteInf1}) × {muestras[0].r1}</p>
+                          <p className="font-mono font-semibold text-blue-700">X = {muestras[0].x}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="text-sm font-semibold text-blue-600 mb-2">Paso 3: Evaluar f(X)</p>
+                        <div className="text-sm bg-gray-50 px-3 py-2 rounded">
+                          <p className="font-mono font-semibold text-blue-700">f({muestras[0].x}) = {muestras[0].fx}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="text-sm font-semibold text-blue-600 mb-2">Paso 4: Calcular Factor de Escala (C)</p>
+                        <div className="text-sm bg-gray-50 px-3 py-2 rounded">
+                          <p className="font-mono">C = 1 / fmax</p>
+                          <p className="font-mono font-semibold text-blue-700">C = {muestras[0].fmax}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="text-sm font-semibold text-blue-600 mb-2">Paso 5: Aplicar criterio de aceptacion</p>
+                        <div className="text-sm bg-gray-50 px-3 py-2 rounded space-y-2">
+                          <p>Condicion: R2 ≤ f(X) × C</p>
+                          <p className="font-mono">{muestras[0].r2} ≤ {muestras[0].fx} × {muestras[0].fmax}</p>
+                          <p className="font-mono">{muestras[0].r2} ≤ {(muestras[0].fx * muestras[0].fmax).toFixed(6)}</p>
+                          <p className="font-semibold mt-2">
+                            <span className={muestras[0].estado === 'Aceptado' ? 'text-green-600' : 'text-red-600'}>
+                              Resultado: {muestras[0].estado}
+                            </span>
+                          </p>
+                          {muestras[0].estado === 'Rechazado' && (
+                            <p className="text-xs text-gray-600 italic mt-1">
+                              Como {muestras[0].r2} &gt; {(muestras[0].fx * muestras[0].fmax).toFixed(6)}, el valor de X se rechaza
+                            </p>
+                          )}
+                          {muestras[0].estado === 'Aceptado' && (
+                            <p className="text-xs text-gray-600 italic mt-1">
+                              Como {muestras[0].r2} ≤ {(muestras[0].fx * muestras[0].fmax).toFixed(6)}, el valor de X se acepta
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
