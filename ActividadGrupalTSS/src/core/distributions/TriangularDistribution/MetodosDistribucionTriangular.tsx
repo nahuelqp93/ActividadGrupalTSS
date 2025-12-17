@@ -28,7 +28,7 @@ export default function MetodosDistribuciones({ onCerrar }: MetodosDistribucione
             </h1>
             <button
               onClick={onCerrar}
-              className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-semibold"
+              className="px-5 py-2 bg-white text-white rounded-lg hover:bg-white transition-colors font-semibold"
             >
               ✕ Cerrar
             </button>

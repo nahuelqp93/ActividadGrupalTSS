@@ -22,7 +22,6 @@ export default function MetodoComposicion() {
   
   const [componentes, setComponentes] = useState<ComponenteComposicion[]>([]);
   const [numSimulaciones, setNumSimulaciones] = useState('10');
-  const [seed, setSeed] = useState(1234);
   const [muestras, setMuestras] = useState<SamplePoint[]>([]);
   const [mostrarGeneracion, setMostrarGeneracion] = useState(false);
   
@@ -238,7 +237,7 @@ export default function MetodoComposicion() {
   // PASO 5, 6, 7: Generar muestras
   const generarMuestras = () => {
     const n = parseInt(numSimulaciones) || 10;
-    const rng = createLCG(seed);
+    const rng = createLCG(1234); // Semilla fija
     const samples: SamplePoint[] = [];
 
     for (let i = 1; i <= n; i++) {
@@ -285,12 +284,12 @@ export default function MetodoComposicion() {
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-black mb-4">
-           Método de Composición (Mezclas)
+           Método de Composición
         </h2>
         
         <div className="bg-purple-50 border-l-4 border-black p-4">
           <p className="text-sm font-semibold mb-2">
-            Algoritmo Metodo de Composición
+             Algoritmo según el documento 
           </p>
           <ol className="text-sm space-y-1 ml-4">
             <li><strong>Paso 1:</strong> Dividir <InlineMath math="f(x)" /> en subáreas</li>
@@ -446,7 +445,7 @@ export default function MetodoComposicion() {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <button
           onClick={() => setMostrarGeneracion(!mostrarGeneracion)}
-          className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-black transition-colors"
+          className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
         >
           {mostrarGeneracion ? ' Ocultar Generación' : ' Paso 5-7: Generar Muestras'}
         </button>
@@ -488,19 +487,19 @@ export default function MetodoComposicion() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Semilla (Seed)</label>
-              <input
-                type="number"
-                value={seed}
-                onChange={(e) => setSeed(parseInt(e.target.value) || 1234)}
-                className="p-2 border border-gray-300 rounded-md w-40"
-              />
+            <div className="flex-1 bg-gray-50 p-3 rounded border border-gray-300">
+              <p className="text-xs font-medium text-gray-600 mb-2">Generador Congruencial Mixto (LCG):</p>
+              <div className="text-sm">
+                <InlineMath math="X_{n+1} = (a \cdot X_n + c) \mod m" />
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                donde <InlineMath math="a = 1664525" />, <InlineMath math="c = 1013904223" />, <InlineMath math="m = 2^{32}" />, <InlineMath math="X_0 = 1234" />
+              </div>
             </div>
 
             <button
               onClick={generarMuestras}
-              className="px-6 py-2 bg-black text-white font-semibold rounded-lg hover:bg-black"
+              className="px-6 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-700"
             >
                Generar con Transformada Inversa
             </button>
