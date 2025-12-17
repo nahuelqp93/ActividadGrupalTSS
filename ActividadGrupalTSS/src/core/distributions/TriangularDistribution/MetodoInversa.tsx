@@ -53,7 +53,7 @@ export default function MetodoInversa() {
       {/* Configuración */}
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-green-800 mb-6 flex items-center gap-2">
-           Método de la Transformada Inversa
+           Método de la Transformada Inversa(No es la version correcta)
         </h2>
         
         <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
@@ -83,7 +83,7 @@ export default function MetodoInversa() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Semilla (Seed)</label>
+        
             <input
               type="number"
               value={seed}
