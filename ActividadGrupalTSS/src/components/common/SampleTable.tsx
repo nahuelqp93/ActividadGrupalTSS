@@ -9,6 +9,7 @@ interface SampleTableProps {
     x?: boolean;
     y?: boolean;
     fx?: boolean;
+    c?: boolean;
     accepted?: boolean;
   };
   maxRows?: number;
@@ -31,6 +32,7 @@ export default function SampleTable({
     x = true,
     y = false,
     fx = true,
+    c = false,
     accepted = true
   } = columns;
 
@@ -47,11 +49,12 @@ export default function SampleTable({
           <thead className="bg-gray-100">
             <tr>
               {i && <th className="border border-gray-300 px-4 py-2">i</th>}
-              {u && <th className="border border-gray-300 px-4 py-2">U₁</th>}
-              {u2 && <th className="border border-gray-300 px-4 py-2">U₂</th>}
+              {u && <th className="border border-gray-300 px-4 py-2">R1</th>}
+              {u2 && <th className="border border-gray-300 px-4 py-2">R2</th>}
               {x && <th className="border border-gray-300 px-4 py-2">X</th>}
               {y && <th className="border border-gray-300 px-4 py-2">Y</th>}
-              {fx && <th className="border border-gray-300 px-4 py-2">f(X)</th>}
+              {fx && <th className="border border-gray-300 px-4 py-2">f(x)</th>}
+              {c && <th className="border border-gray-300 px-4 py-2">C</th>}
               {accepted && <th className="border border-gray-300 px-4 py-2">Estado</th>}
             </tr>
           </thead>
@@ -72,6 +75,9 @@ export default function SampleTable({
                 )}
                 {fx && sample.fx !== undefined && (
                   <td className="border border-gray-300 px-4 py-2">{sample.fx.toFixed(6)}</td>
+                )}
+                {c && sample.c !== undefined && (
+                  <td className="border border-gray-300 px-4 py-2">{sample.c.toFixed(6)}</td>
                 )}
                 {accepted && (
                   <td className={`border border-gray-300 px-4 py-2 font-semibold text-center ${

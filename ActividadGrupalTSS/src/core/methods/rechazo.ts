@@ -17,16 +17,19 @@ export const rejectionMethod: GeneratorMethod<RejectionParams> = ({
   fmax
 }) => {
   const samples: SamplePoint[] = [];
+  const c = 1 / fmax; 
 
   for (let i = 1; i <= n; i++) {
     const u1 = nextU();
     const u2 = nextU();
 
     const x = xmin + (xmax - xmin) * u1;
-    const y = u2 * fmax;
     const fx = pdf(x);
-
-    const accepted = y <= fx;
+    const yRechazado = u2 * 1/c; 
+    
+    const accepted = u2 <= fx * c;
+    
+    const y = accepted ? fx : yRechazado;
 
     samples.push({
       i,
@@ -35,6 +38,7 @@ export const rejectionMethod: GeneratorMethod<RejectionParams> = ({
       x,
       y,
       fx,
+      c,
       accepted
     });
   }

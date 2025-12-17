@@ -224,12 +224,13 @@ export default function GenerarMuestras({
               u: true,
               u2: true,
               x: true,
-              y: true,
+              y: false,
               fx: true,
+              c: true,
               accepted: true
             }}
             showFormulas={{
-              xFormula: `x = ${limiteInf1} + (${limiteSupf2} - ${limiteInf1}) × U₁`,
+              xFormula: `x = ${limiteInf1} + (${limiteSupf2} - ${limiteInf1}) × R1`,
               cFormula: `C = 1 / fmax`
             }}
           />
