@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Conceptos from "./modules/conceptos/Conceptos.tsx";
-import Simulacion from "./modules/simulacion/Simulacion.tsx";
+import ComposicionView from "./modules/simulacion/ComposicionView.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 // Importamos las distribuciones
@@ -28,7 +28,7 @@ export default function AppRoutes() {
 
       <Route path="/distribuciones/continuas/exponencial" element={<ExponentialDistribution />} />
       
-      <Route path="/simulacion" element={<Simulacion />} />
+      <Route path="/simulacion/composicion" element={<ComposicionView />} />
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );

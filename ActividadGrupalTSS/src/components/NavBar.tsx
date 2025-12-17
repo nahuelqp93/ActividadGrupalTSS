@@ -9,7 +9,10 @@ import {
   ChevronDown, 
   ChevronRight,
   Activity,     // Icono para discretas
-  TrendingUp    // Icono para continuas
+  TrendingUp,   // Icono para continuas
+  Layers,       // Icono para composición
+  RefreshCw,    // Icono para transformada inversa
+  Target        // Icono para rechazo
 } from "lucide-react";
 
 export default function NavBar() {
@@ -18,6 +21,9 @@ export default function NavBar() {
   // Estado para saber si el menú de distribuciones está abierto
   // Truco: Si la URL actual incluye "distribuciones", lo iniciamos abierto
   const [isDistOpen, setIsDistOpen] = useState(location.pathname.includes("distribuciones"));
+  
+  // Estado para el menú de simulación
+  const [isSimOpen, setIsSimOpen] = useState(location.pathname.includes("simulacion"));
 
   const isActive = (path: string) => location.pathname === path;
   const isParentActive = location.pathname.includes("/distribuciones");
@@ -112,13 +118,32 @@ export default function NavBar() {
         </li>
         {/* ------------------------------------------- */}
 
-        {/* SIMULACIÓN */}
+        {/* --- SECCIÓN DESPLEGABLE: SIMULACIÓN --- */}
         <li>
-          <Link to="/simulacion" className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive("/simulacion") ? "bg-yellow-500 text-slate-900 font-bold" : "hover:bg-slate-700"}`}>
-            <PlayCircle size={20} />
-            <span>Simulación</span>
-          </Link>
+          <button 
+            onClick={() => setIsSimOpen(!isSimOpen)}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${location.pathname.includes("/simulacion") ? "bg-slate-700 text-yellow-300" : "hover:bg-slate-700"}`}
+          >
+            <div className="flex items-center gap-4">
+              <PlayCircle size={20} />
+              <span>Simulación</span>
+            </div>
+            {isSimOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </button>
+
+          {/* Sub-menú */}
+          {isSimOpen && (
+            <ul className="mt-2 ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
+              <li>
+                <Link to="/simulacion/composicion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/composicion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Layers size={16} />
+                  MÉTODO DE COMPOSICIÓN
+                </Link>
+              </li>
+            </ul>
+          )}
         </li>
+        {/* ------------------------------------------- */}
 
         {/* AYUDA */}
         <li>
