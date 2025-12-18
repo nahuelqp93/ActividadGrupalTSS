@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Conceptos from "./modules/conceptos/Conceptos.tsx";
-import Simulacion from "./modules/simulacion/Simulacion.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 // Importamos las distribuciones
@@ -10,6 +9,13 @@ import PoissonDistribution from "./core/distributions/PoissonDistribution.tsx";
 import ExponentialDistribution from "./core/distributions/ExponentialDistribution.tsx";
 import BernoullyDistribution from "./core/distributions/BernoullyDistribution.tsx";
 import UniformDistribution from "./core/distributions/UniformDistribution.tsx";
+
+//ejercicios de simulacion
+// Simulación
+import AplicacionIndex from "./modules/simulacion/aplicacion/AplicacionIndex";
+import { LayoutAplicacion } from "./modules/simulacion/utils/LayoutAplicacion";
+import SimulacionEjercicio1 from "./modules/simulacion/aplicacion/Ejercicio1.tsx";
+import SimulacionEjercicio2 from "./modules/simulacion/aplicacion/Ejercicio2.tsx";
 
 export default function AppRoutes() {
   return (
@@ -28,7 +34,17 @@ export default function AppRoutes() {
 
       <Route path="/distribuciones/continuas/exponencial" element={<ExponentialDistribution />} />
       
-      <Route path="/simulacion" element={<Simulacion />} />
+            {/* Simulación */}
+      <Route path="/simulacion/aplicacion" element={<AplicacionIndex />} />
+
+
+      <Route path="/simulacion/aplicacion/ejercicio-1" element={ <LayoutAplicacion> <SimulacionEjercicio1 /> </LayoutAplicacion> } />
+
+      <Route path="/simulacion/aplicacion/ejercicio-2" element={ <LayoutAplicacion> <SimulacionEjercicio2 /> </LayoutAplicacion> } />
+
+
+
+
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );
