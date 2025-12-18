@@ -62,7 +62,7 @@ export function LayoutAplicacion({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Contenido Principal */}
-      <main className="mx-auto max-w-5xl p-6">
+      <main className="mx-auto max-w-350 p-8">
         <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
           {children}
         </div>
