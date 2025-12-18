@@ -1,27 +1,14 @@
-﻿import { useState } from "react"; // Importante importar useState
+﻿import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
-  Home, 
-  BookOpen, 
-  BarChart3, 
-  PlayCircle, 
-  HelpCircle, 
-  ChevronDown, 
-  ChevronRight,
-  Activity,     // Icono para discretas
-  TrendingUp,   // Icono para continuas
-  FlaskConical, // Icono para ejercicios de aplicación
-  BookCheck     // Icono para ejercicios teóricos
+  Home, BookOpen, BarChart3, PlayCircle, HelpCircle, 
+  ChevronDown, Activity, TrendingUp, FlaskConical, BookCheck 
 } from "lucide-react";
 
 export default function NavBar() {
   const location = useLocation();
   
-  // Estado para saber si el menú de distribuciones está abierto
-  // Truco: Si la URL actual incluye "distribuciones", lo iniciamos abierto
   const [isDistOpen, setIsDistOpen] = useState(location.pathname.includes("distribuciones"));
-  
-  // Estado para saber si el menú de simulación está abierto
   const [isSimOpen, setIsSimOpen] = useState(location.pathname.includes("simulacion"));
 
   const isActive = (path: string) => location.pathname === path;
@@ -39,7 +26,6 @@ export default function NavBar() {
         <p className="text-xs text-slate-400 mt-1">UMSS - Ingeniería</p>
       </div>
 
-      {/* Links */}
       <ul className="flex-1 px-4 py-6 space-y-2">
         
         {/* INICIO */}
@@ -58,7 +44,7 @@ export default function NavBar() {
           </Link>
         </li>
 
-        {/* --- SECCIÓN DESPLEGABLE: DISTRIBUCIONES --- */}
+        {/* --- SECCIÓN: DISTRIBUCIONES --- */}
         <li>
           <button 
             onClick={() => setIsDistOpen(!isDistOpen)}
@@ -68,57 +54,49 @@ export default function NavBar() {
               <BarChart3 size={20} />
               <span>Distribuciones</span>
             </div>
-            {isDistOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            {/* Animación de rotación en el icono */}
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isDistOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
-          {/* Sub-menú */}
-          {isDistOpen && (
-            <ul className="mt-2 ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
-              {/* Continuas */}
-              <li>
-                <p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Continuas</p>
-              </li>
+          {/* Sub-menú con Animación de Deslizamiento */}
+          <div className={`grid transition-all duration-300 ease-in-out ${isDistOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
+            <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
+              <li><p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Continuas</p></li>
               <li>
                 <Link to="/distribuciones/continuas/triangular" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/triangular") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <TrendingUp size={16} />
-                  Triangular
+                  <TrendingUp size={16} /> Triangular
                 </Link>
               </li>
               <li>
-                <Link to="/distribuciones/continuas/uniforme" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/uniforme-lcg") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <TrendingUp size={16} />
-                  Uniforme
+                <Link to="/distribuciones/continuas/uniforme" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/uniforme") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <TrendingUp size={16} /> Uniforme
                 </Link>
               </li>
-              <li>
+                 <li>
                 <Link to="/distribuciones/continuas/exponencial" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/exponencial") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <TrendingUp size={16} />
                   Exponencial
                 </Link>
               </li>
 
-              {/* Discretas */}
-              <li>
-                <p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Discretas</p>
-              </li>
+              <li><p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Discretas</p></li>
               <li>
                 <Link to="/distribuciones/discretas/poisson" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/poisson") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <Activity size={16} />
-                  Poisson
+                  <Activity size={16} /> Poisson
                 </Link>
-              </li>
-              <li>
+
+                 <li>
                 <Link to="/distribuciones/discretas/bernoulli" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/bernoulli") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <Activity size={16} />
                   Bernoulli
                 </Link>
               </li>
+              </li>
             </ul>
-          )}
+          </div>
         </li>
-        {/* ------------------------------------------- */}
 
-        {/* --- SECCIÓN DESPLEGABLE: SIMULACIÓN --- */}
+        {/* --- SECCIÓN: SIMULACIÓN --- */}
         <li>
           <button 
             onClick={() => setIsSimOpen(!isSimOpen)}
@@ -128,31 +106,25 @@ export default function NavBar() {
               <PlayCircle size={20} />
               <span>Simulación</span>
             </div>
-            {isSimOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isSimOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
-          {/* Sub-menú */}
-          {isSimOpen && (
-            <ul className="mt-2 ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
-              {/* Ejercicios de Aplicación */}
+          {/* Sub-menú con Animación de Deslizamiento */}
+          <div className={`grid transition-all duration-300 ease-in-out ${isSimOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
+            <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
               <li>
                 <Link to="/simulacion/aplicacion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/aplicacion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <FlaskConical size={16} />
-                  Ejercicios de Aplicación
+                  <FlaskConical size={16} /> Ejercicios Aplicación
                 </Link>
               </li>
-              
-              {/* Ejercicios Teóricos */}
               <li>
                 <Link to="/simulacion/teoricos" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <BookCheck size={16} />
-                  Ejercicios Teóricos
+                  <BookCheck size={16} /> Ejercicios Teóricos
                 </Link>
               </li>
             </ul>
-          )}
+          </div>
         </li>
-        {/* ------------------------------------------- */}
 
         {/* AYUDA */}
         <li>
@@ -161,7 +133,6 @@ export default function NavBar() {
             <span>Ayuda</span>
           </Link>
         </li>
-
       </ul>
     </nav>
   );
