@@ -5,10 +5,10 @@ import Ayuda from "./pages/Ayuda.tsx";
 
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
-import PoissonDistribution from "./core/distributions/PoissonDistribution.tsx";
-import ExponentialDistribution from "./core/distributions/ExponentialDistribution.tsx";
+import PoissonDistribution from "./core/distributions/PoissonDistribution/PoissonDistribution.tsx";
+import ExponentialDistribution from "./core/distributions/ExponentialDistribution/ExponentialDistribution.tsx";
 import BernoullyDistribution from "./core/distributions/BernoullyDistribution.tsx";
-import UniformDistribution from "./core/distributions/UniformDistribution.tsx";
+import UniformDistribution from "./core/distributions/UniformDistribution/UniformDistribution.tsx";
 
 //ejercicios de simulacion
 // Simulación
@@ -20,6 +20,7 @@ import SimulacionEjercicio3 from "./modules/simulacion/aplicacion/Ejercicio3.tsx
 import SimulacionEjercicio4 from "./modules/simulacion/aplicacion/Ejercicio4.tsx";
 import SimulacionEjercicio5 from "./modules/simulacion/aplicacion/Ejercicio5.tsx";
 import SimulacionEjercicio6 from "./modules/simulacion/aplicacion/Ejercicio6.tsx";
+import SimulacionEjercicio7 from "./modules/simulacion/aplicacion/Ejercicio7.tsx";
 
 export default function AppRoutes() {
   return (
@@ -54,6 +55,7 @@ export default function AppRoutes() {
 
       <Route path="/simulacion/aplicacion/ejercicio-6" element={ <LayoutAplicacion> <SimulacionEjercicio6 /> </LayoutAplicacion> } />
 
+      <Route path="/simulacion/aplicacion/ejercicio-7" element={ <LayoutAplicacion> <SimulacionEjercicio7 /> </LayoutAplicacion> } />
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );

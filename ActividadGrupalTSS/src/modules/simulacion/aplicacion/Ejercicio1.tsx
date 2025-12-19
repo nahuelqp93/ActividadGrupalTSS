@@ -113,7 +113,7 @@ export default function SimulacionColas() {
     <div className="min-h-screen bg-white p-6 text-black">
       <div className="max-w-7xl mx-auto space-y-6">
         <Enunciado
-          titulo="Sistema de colas en serie"
+          titulo="Ejercicio 1: Sistema de colas en serie"
           descripcion="Se tiene un sistema de colas formado por dos estaciones en serie. Los clientes atendidos en la primera estación pasan en seguida a formar cola en la segunda. En la primera estación de servicio, la razón de llegadas sigue una distribución Poisson con media de 20 clientes por hora, y el tiempo de servicio sigue una distribución exponencial con media de 2 minutos por persona. En la segunda estación, el tiempo de servicio está uniformemente distribuido entre 1 y 2 minutos. Para esta información, ¿Cuál es el tiempo promedio en 
 el sistema?, ¿Cuál de las dos colas que se forman es mayor?"
           preguntas={[
