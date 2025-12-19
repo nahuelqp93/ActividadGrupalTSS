@@ -4,9 +4,10 @@ import { InlineMath, BlockMath } from 'react-katex';
 interface FormulasPoissonProps {
   lambda?: number; // Tasa de llegadas (clientes por hora)
   mostrarEjemplo?: boolean;
+  unidad?: string; // Unidad de tiempo (ej: "clientes por hora", "días")
 }
 
-export default function FormulasPoisson({ lambda, mostrarEjemplo = false }: FormulasPoissonProps) {
+export default function FormulasPoisson({ lambda, mostrarEjemplo = false, unidad = "clientes por hora" }: FormulasPoissonProps) {
   return (
     <div className="bg-blue-50 border-l-4 border-black p-4 rounded-lg">
       <h4 className="font-bold text-black mb-3 flex items-center gap-2">
@@ -36,11 +37,18 @@ export default function FormulasPoisson({ lambda, mostrarEjemplo = false }: Form
           <div className="bg-white p-3 rounded border border-blue-200">
             <p className="font-semibold text-blue-700 mb-1">Parámetros del ejercicio:</p>
             <p className="text-gray-700">
-              <InlineMath math={`\\lambda = ${lambda}`} /> clientes por hora
+              <InlineMath math={`\\lambda = ${lambda}`} /> {unidad}
             </p>
-            <p className="text-gray-700 text-xs mt-1">
-              Tiempo promedio entre llegadas: <InlineMath math={`\\frac{1}{\\lambda} = ${(60/lambda).toFixed(2)}`} /> minutos
-            </p>
+            {unidad === "clientes por hora" && (
+              <p className="text-gray-700 text-xs mt-1">
+                Tiempo promedio entre llegadas: <InlineMath math={`\\frac{1}{\\lambda} = ${(60/lambda).toFixed(2)}`} /> minutos
+              </p>
+            )}
+            {unidad === "días" && (
+              <p className="text-gray-700 text-xs mt-1">
+                Tiempo de entrega promedio de {lambda} días
+              </p>
+            )}
           </div>
         )}
 
