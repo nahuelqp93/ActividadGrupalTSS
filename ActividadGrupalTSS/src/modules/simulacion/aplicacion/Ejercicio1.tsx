@@ -113,17 +113,18 @@ export default function SimulacionColas() {
     <div className="min-h-screen bg-white p-6 text-black">
       <div className="max-w-7xl mx-auto space-y-6">
         <Enunciado
-          titulo="Sistema de colas en serie"
-          descripcion="Sistema formado por dos estaciones en serie. El usuario puede modificar todos los parámetros del modelo."
+          titulo="Ejercicio 1: Sistema de colas en serie"
+          descripcion="Se tiene un sistema de colas formado por dos estaciones en serie. Los clientes atendidos en la primera estación pasan en seguida a formar cola en la segunda. En la primera estación de servicio, la razón de llegadas sigue una distribución Poisson con media de 20 clientes por hora, y el tiempo de servicio sigue una distribución exponencial con media de 2 minutos por persona. En la segunda estación, el tiempo de servicio está uniformemente distribuido entre 1 y 2 minutos. Para esta información, ¿Cuál es el tiempo promedio en 
+el sistema?, ¿Cuál de las dos colas que se forman es mayor?"
           preguntas={[
             'Tiempo promedio en el sistema',
             'Cola con mayor tiempo de espera',
           ]}
           datos={[
-            { label: 'Llegadas (λ)', valor: `${lambdaLlegadas} clientes/hora` },
-            { label: 'Servicio estación 1', valor: `${mediaServicio1} minutos` },
+            { label: 'Llegadas (λ) Poisson', valor: `${lambdaLlegadas} clientes/hora` },
+            { label: 'Servicio estación 1 Exponencial', valor: `${mediaServicio1} minutos` },
             {
-              label: 'Servicio estación 2',
+              label: 'Servicio estación 2 Uniforme continua',
               valor: `[${limInfServicio2}, ${limSupServicio2}] minutos`,
             },
           ]}
@@ -167,9 +168,12 @@ export default function SimulacionColas() {
             
           </div>
 
-          <button onClick={simular} className="border px-4 py-2">
-            Ejecutar simulación
-          </button>
+          <button
+  onClick={simular}
+  className="rounded-md bg-slate-700 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 shadow-sm"
+>
+  Ejecutar simulación
+</button>
         </div>
 
         {mostrarResultados && (
