@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Conceptos from "./modules/conceptos/Conceptos.tsx";
-import ComposicionView from "./modules/simulacion/ComposicionView.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
@@ -10,6 +9,8 @@ import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discreta
 import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
 import FuncionCDF from "./modules/conceptos/funciones/CDF.tsx";
 import FuncionPDF from "./modules/conceptos/funciones/PDF.tsx";
+import PruebasAleatoriedad from "./modules/conceptos/pruebasAleatoriedad/PruebasAleatoriedad.tsx";
+import TeoriaColas from "./modules/conceptos/teoriaColas/TeoriaColas.tsx";
 
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
@@ -17,6 +18,8 @@ import PoissonDistribution from "./core/distributions/PoissonDistribution/Poisso
 import ExponentialDistribution from "./core/distributions/ExponentialDistribution/ExponentialDistribution.tsx";
 import BernoullyDistribution from "./core/distributions/BernoullyDistribution.tsx";
 import UniformDistribution from "./core/distributions/UniformDistribution/UniformDistribution.tsx";
+import NormalDistribution from "./core/distributions/NormalDistribution/NormalDistribution.tsx";
+import BinomialDistribution from "./core/distributions/BinomialDistribution/BinomialDistribution.tsx";
 
 //ejercicios de simulacion
 // Simulación
@@ -51,6 +54,10 @@ export default function AppRoutes() {
 
       <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
 
+      <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />
+
+      <Route path="/conceptos/teoria-colas" element={<TeoriaColas />} />
+
       
       
       {/* Rutas Específicas para Distribuciones */}
@@ -63,6 +70,10 @@ export default function AppRoutes() {
       <Route path="/distribuciones/continuas/uniforme" element={<UniformDistribution />} />
 
       <Route path="/distribuciones/continuas/exponencial" element={<ExponentialDistribution />} />
+
+      <Route path="/distribuciones/continuas/normal" element={<NormalDistribution />} />
+
+      <Route path="/distribuciones/discretas/binomial" element={<BinomialDistribution />} />
       
             {/* Simulación */}
       <Route path="/simulacion/aplicacion" element={<AplicacionIndex />} />
@@ -81,7 +92,6 @@ export default function AppRoutes() {
       <Route path="/simulacion/aplicacion/ejercicio-6" element={ <LayoutAplicacion> <SimulacionEjercicio6 /> </LayoutAplicacion> } />
 
       <Route path="/simulacion/aplicacion/ejercicio-7" element={ <LayoutAplicacion> <SimulacionEjercicio7 /> </LayoutAplicacion> } />
-      <Route path="/simulacion/composicion" element={<ComposicionView />} />
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );
