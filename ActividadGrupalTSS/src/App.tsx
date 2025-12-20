@@ -6,11 +6,11 @@ function App() {
   return (
     <BrowserRouter>
       <NavBar />
-      <div className="ml-64 mt-4 px-6 min-h-screen">
+      {/* Eliminamos el px-6 y dejamos que el layout maneje el ancho */}
+      <div className="ml-80 min-h-screen bg-slate-50"> 
         <AppRoutes />
       </div>
     </BrowserRouter>
   );
 }
-
 export default App;
