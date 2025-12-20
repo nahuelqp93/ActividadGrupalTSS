@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
-import Conceptos from "./modules/conceptos/Conceptos.tsx";
+
 import Ayuda from "./pages/Ayuda.tsx";
 
 import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
@@ -24,6 +24,7 @@ import BinomialDistribution from "./core/distributions/BinomialDistribution/Bino
 //ejercicios de simulacion
 // Simulación
 import AplicacionIndex from "./modules/simulacion/aplicacion/AplicacionIndex";
+import ComposicionView from "./modules/simulacion/ComposicionView";
 import { LayoutAplicacion } from "./modules/simulacion/utils/LayoutAplicacion";
 import SimulacionEjercicio1 from "./modules/simulacion/aplicacion/Ejercicio1.tsx";
 import SimulacionEjercicio2 from "./modules/simulacion/aplicacion/Ejercicio2.tsx";
@@ -58,6 +59,8 @@ export default function AppRoutes() {
 
       <Route path="/conceptos/teoria-colas" element={<TeoriaColas />} />
 
+      <Route path="/simulacion/composicion" element={<ComposicionView />} />
+
       
       
       {/* Rutas Específicas para Distribuciones */}
@@ -77,7 +80,6 @@ export default function AppRoutes() {
       
             {/* Simulación */}
       <Route path="/simulacion/aplicacion" element={<AplicacionIndex />} />
-
 
       <Route path="/simulacion/aplicacion/ejercicio-1" element={ <LayoutAplicacion> <SimulacionEjercicio1 /> </LayoutAplicacion> } />
 
