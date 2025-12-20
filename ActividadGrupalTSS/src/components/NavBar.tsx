@@ -2,7 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { 
   Home, BookOpen, BarChart3, PlayCircle, HelpCircle, 
-  ChevronDown, Activity, TrendingUp, FlaskConical, BookCheck 
+  ChevronDown, Activity, TrendingUp, FlaskConical, BookCheck, Dice6, GamepadDirectional
 } from "lucide-react";
 
 export default function NavBar() {
@@ -10,14 +10,15 @@ export default function NavBar() {
   
   const [isDistOpen, setIsDistOpen] = useState(location.pathname.includes("distribuciones"));
   const [isSimOpen, setIsSimOpen] = useState(location.pathname.includes("simulacion"));
+  const [isConceptosOpen, setIsConceptosOpen] = useState(location.pathname.includes("conceptos"));
 
   const isActive = (path: string) => location.pathname === path;
   const isParentActive = location.pathname.includes("/distribuciones");
   const isSimParentActive = location.pathname.includes("/simulacion");
 
   return (
-    <nav className="fixed left-0 top-0 h-screen w-64 bg-slate-800 text-white shadow-2xl flex flex-col overflow-y-auto z-50">
-      
+    // En NavBar.tsx
+<nav className="fixed left-0 top-0 h-screen w-80 bg-slate-800 text-white shadow-2xl flex flex-col overflow-y-auto z-50 sidebar-scroll">
       {/* Header */}
       <div className="px-6 py-8 border-b border-slate-700 bg-slate-900">
         <h1 className="text-lg font-bold leading-tight tracking-wide text-yellow-500">
@@ -37,12 +38,34 @@ export default function NavBar() {
         </li>
 
         {/* CONCEPTOS */}
-        <li>
-          <Link to="/conceptos" className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive("/conceptos") ? "bg-yellow-500 text-slate-900 font-bold" : "hover:bg-slate-700"}`}>
-            <BookOpen size={20} />
-            <span>Conceptos</span>
-          </Link>
-        </li>
+<li>
+  <button 
+    onClick={() => setIsConceptosOpen(!isConceptosOpen)}
+    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all hover:bg-slate-700 ${isConceptosOpen ? "bg-slate-700" : ""}`}
+  >
+    <div className="flex items-center gap-4">
+      <BookOpen size={20} />
+      <span>Conceptos</span>
+    </div>
+    {/* Agregamos la flecha con rotación dinámica */}
+    <ChevronDown size={16} className={`transition-transform duration-300 ${isConceptosOpen ? "rotate-180" : "rotate-0"}`} />
+  </button>
+
+  <div className={`grid transition-all duration-300 ease-in-out ${isConceptosOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
+    <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
+      <li>
+        <Link to="/conceptos/variables-aleatorias" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/variables-aleatorias") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+          <Dice6 size={16} /> Variables Aleatorias
+        </Link>
+      </li>
+      <li>
+        <Link to="/conceptos/ejercicios" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/ejercicios") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+          <GamepadDirectional size={16} /> Ejercicios Interactivos
+        </Link>
+      </li>
+    </ul>
+  </div>
+</li>
 
         {/* --- SECCIÓN: DISTRIBUCIONES --- */}
         <li>
