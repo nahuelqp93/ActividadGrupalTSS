@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { evaluate } from 'mathjs';
-import GenerarMuestras from '../../../modules/distribuciones/GenerarMuestras.tsx';
+import GenerarMuestras from '../../../modules/distribuciones/GenerarMuestras';
 
 export default function Distribuciones() {
   const [ecuacion1, setEcuacion1] = useState('x/400 - 19/40');
@@ -40,11 +40,11 @@ export default function Distribuciones() {
     const minX = Math.min(minX1, minX2);
     const maxX = Math.max(maxX1, maxX2);
     const rangoX = maxX - minX;
-    
+
     let minY = Infinity;
     let maxY = -Infinity;
     const numSamples = 200;
-    
+
     for (let i = 0; i <= numSamples; i++) {
       const x1 = minX1 + (maxX1 - minX1) * (i / numSamples);
       const y1 = evaluarFuncion(ecuacion1, x1);
@@ -52,7 +52,7 @@ export default function Distribuciones() {
         minY = Math.min(minY, y1);
         maxY = Math.max(maxY, y1);
       }
-      
+
       const x2 = minX2 + (maxX2 - minX2) * (i / numSamples);
       const y2 = evaluarFuncion(ecuacion2, x2);
       if (y2 !== null && isFinite(y2) && y2 >= 0) {
@@ -71,10 +71,10 @@ export default function Distribuciones() {
 
     const width = canvas.width;
     const height = canvas.height;
-    const originX = 60; 
-    const originY = height - 50; 
+    const originX = 60;
+    const originY = height - 50;
     const scaleX = (width - originX - 20) / rangoX;
-    const scaleY = (originY - 30) / maxY; 
+    const scaleY = (originY - 30) / maxY;
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -110,14 +110,14 @@ export default function Distribuciones() {
       ctx.fillText(yValue.toFixed(2), originX - 10, y);
     }
     try {
-      ctx.strokeStyle = '#3B82F6'; 
+      ctx.strokeStyle = '#3B82F6';
       ctx.lineWidth = 2;
       ctx.beginPath();
       let primerPunto = true;
 
       for (let px = originX; px < width; px++) {
         const x = minX + (px - originX) / scaleX;
-        
+
         if (x >= minX1 && x <= maxX1) {
           const y = evaluarFuncion(ecuacion1, x);
 
@@ -148,14 +148,14 @@ export default function Distribuciones() {
     }
 
     try {
-      ctx.strokeStyle = '#EF4444'; 
+      ctx.strokeStyle = '#EF4444';
       ctx.lineWidth = 2;
       ctx.beginPath();
       let primerPunto = true;
 
       for (let px = originX; px < width; px++) {
         const x = minX + (px - originX) / scaleX;
-        
+
         if (x >= minX2 && x <= maxX2) {
           const y = evaluarFuncion(ecuacion2, x);
 
@@ -226,13 +226,13 @@ export default function Distribuciones() {
             </div>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-           Inserta la ecuacion f1(x) y sus limites
+            Inserta la ecuacion f1(x) y sus limites
           </p>
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-2">
-            Función 2 
+            Función 2
           </label>
           <input
             type="text"
