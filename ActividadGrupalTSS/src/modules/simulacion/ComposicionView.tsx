@@ -13,6 +13,13 @@ import {
   Cell,
 } from "recharts";
 import * as math from "mathjs";
+import { SegmentValidator } from "../../core/validation/SegmentValidator";
+import type { ValidationResult, SuggestionFix, ValidationIssue } from "../../core/validation/SegmentValidator";
+
+type AppliedFix = {
+  segmentId: string;
+  suggestion: SuggestionFix;
+};
 
 interface Segment {
   id: string;
@@ -113,6 +120,11 @@ export default function ComposicionView() {
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [simulationHistory, setSimulationHistory] = useState<SimulationResult[]>([]);
 
+  // Validación y excavación
+  const [validation, setValidation] = useState<ValidationResult | null>(null);
+  const [showValidationReport, setShowValidationReport] = useState(false);
+  const [appliedFixes, setAppliedFixes] = useState<Array<{ segmentId: string; suggestion: SuggestionFix }>>([]);
+
   // Agregar segmento
   const addSegment = () => {
     const newId = (Math.max(...segments.map((s) => parseInt(s.id)), 0) + 1).toString();
@@ -131,48 +143,45 @@ export default function ComposicionView() {
     setSegments(segments.map((s) => (s.id === id ? { ...s, [field]: value } : s)));
   };
 
-  // Analizar función
+  // Analizar función con validación
   const handleAnalyze = () => {
     setError(null);
+    setShowValidationReport(false);
 
-    // Validar segmentos
+    // Validación rápida básica
     for (const seg of segments) {
       if (seg.xmin >= seg.xmax) {
         setError(`Error: xmin debe ser menor que xmax para el segmento ${seg.id}`);
         return;
       }
-      try {
-        math.evaluate(seg.formula, { x: (seg.xmin + seg.xmax) / 2 });
-      } catch {
-        setError(`Error: Fórmula inválida en segmento ${seg.id}`);
-        return;
-      }
     }
 
-    // Calcular áreas
-    const areas = segments.map((seg) => numericalIntegration(seg.formula, seg.xmin, seg.xmax));
-    const totalArea = areas.reduce((a, b) => a + b, 0);
+    // Ejecutar validación completa
+    const validationResult = SegmentValidator.validateSegments(segments);
+    setValidation(validationResult);
 
-    if (totalArea === 0) {
-      setError("Error: El área total es cero");
+    // Si hay errores, mostrar validación
+    if (!validationResult.isValid) {
+      setShowValidationReport(true);
+      setError("Se detectaron problemas en los segmentos. Revisa el reporte de validación.");
       return;
     }
 
-    // Factor de normalización
-    const normalizationFactor = 1 / totalArea;
+    // Si todo es válido, proceder con el análisis
+    const areas = validationResult.normalizedAreas;
+    const totalArea = validationResult.totalArea;
+    const normalizationFactor = validationResult.normalizationFactor;
 
-    // Probabilidades acumuladas
-    const normalizedAreas = areas.map((a) => a * normalizationFactor);
     const cumulativeProbs = [];
     let cumsum = 0;
-    for (const area of normalizedAreas) {
+    for (const area of areas) {
       cumsum += area;
       cumulativeProbs.push(cumsum);
     }
 
     const result: AnalysisResult = {
       segments,
-      areas: normalizedAreas,
+      areas,
       totalArea,
       normalizationFactor,
       cumulativeProbs,
@@ -180,6 +189,33 @@ export default function ComposicionView() {
 
     setAnalysis(result);
     setAnalyzed(true);
+    setAppliedFixes([]);
+  };
+
+  // Excavación automática para ajustar segmentos
+  const handleAutoExcavate = () => {
+    if (!validation) {
+      setError("Primero ejecuta la validación");
+      return;
+    }
+
+    const result = SegmentValidator.autoExcavate(segments);
+    setSegments(result.fixedSegments);
+    setAppliedFixes(result.appliedFixes);
+    setAnalyzed(false);
+    setAnalysis(null);
+
+    // Re-validar después de los ajustes
+    setTimeout(() => {
+      const newValidation = SegmentValidator.validateSegments(result.fixedSegments);
+      setValidation(newValidation);
+      
+      if (newValidation.isValid) {
+        setError("Segmentos ajustados exitosamente. Haz clic en 'Analizar' para continuar.");
+      } else {
+        setError("⚠️ Se aplicaron ajustes pero persisten algunos problemas.");
+      }
+    }, 100);
   };
 
   // Generar gráfica de la función
@@ -294,12 +330,108 @@ export default function ComposicionView() {
  
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-white min-h-screen">
+    <div className="p-6 max-w-6xl mx-auto bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="border-b-2 border-gray-300 pb-6 mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Método de Composición - Función Definida a Trozos</h1>
-        <p className="text-gray-600 text-base mt-2">Generación de variables aleatorias con funciones arbitrarias</p>
+      <div className="border-b-4 border-blue-600 pb-6 mb-8">
+        <h1 className="text-4xl font-bold text-gray-900">Método de Composición - Función Definida a Trozos</h1>
+        <p className="text-gray-700 text-lg mt-2">Generación de variables aleatorias con funciones arbitrarias</p>
       </div>
+
+      {/* Mensajes de error/éxito */}
+      {error && (
+        <div className={`border-l-4 px-4 py-3 rounded mb-6 font-semibold ${error.includes('success') ? 'bg-green-50 border-green-500 text-green-700' : error.includes('warning') ? 'bg-yellow-50 border-yellow-500 text-yellow-700' : 'bg-red-50 border-red-500 text-red-700'}`}>
+          {error}
+        </div>
+      )}
+
+      {/* Reporte de Validación */}
+      {validation && showValidationReport && (
+        <div className="bg-white border-2 border-yellow-400 rounded-lg p-6 mb-6 shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-900">
+              {validation.isValid ? 'Validación Exitosa' : 'Problemas Detectados'}
+            </h3>
+            <button
+              onClick={() => setShowValidationReport(false)}
+              className="text-gray-600 hover:text-gray-900 text-xl"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Problemas */}
+          {validation.issues.length > 0 && (
+            <div className="mb-4">
+              <h4 className="font-semibold text-red-700 mb-2">Problemas Encontrados ({validation.issues.length}):</h4>
+              <div className="space-y-2">
+                {validation.issues.map((issue: ValidationIssue, idx: number) => (
+                  <div key={idx} className={`p-3 rounded text-sm ${issue.severity === 'error' ? 'bg-red-50 border-l-4 border-red-500' : 'bg-yellow-50 border-l-4 border-yellow-500'}`}>
+                    <p className="font-semibold text-gray-900">
+                      [{issue.type.toUpperCase()}] Segmento {issue.segment}
+                    </p>
+                    <p className="text-gray-700 mt-1">{issue.description}</p>
+                    {issue.details && <p className="text-xs text-gray-600 mt-1">{issue.details}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sugerencias */}
+          {validation.suggestions.length > 0 && (
+            <div className="mb-4">
+              <h4 className="font-semibold text-blue-700 mb-2">Sugerencias de Ajuste ({validation.suggestions.length}):</h4>
+              <div className="space-y-2">
+                {validation.suggestions
+                  .sort((a: SuggestionFix, b: SuggestionFix) => b.confidence - a.confidence)
+                  .slice(0, 5)
+                  .map((sug: SuggestionFix, idx: number) => (
+                    <div key={idx} className="p-3 rounded text-sm bg-blue-50 border-l-4 border-blue-500">
+                      <p className="font-semibold text-gray-900">
+                        {sug.action.toUpperCase()} - Confianza: {(sug.confidence * 100).toFixed(0)}%
+                      </p>
+                      <p className="text-xs text-gray-700 mt-1">
+                        <strong>Segmento {sug.segment}:</strong> {sug.originalFormula} → {sug.suggestedFormula}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">{sug.reason}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Botones de acción */}
+          {!validation.isValid && (
+            <div className="flex gap-3 pt-4 border-t">
+              <button
+                onClick={handleAutoExcavate}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
+              >
+                Excavación Automática
+              </button>
+              <button
+                onClick={() => setShowValidationReport(false)}
+                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors"
+              >
+                Cerrar Reporte
+              </button>
+            </div>
+          )}
+
+          {appliedFixes.length > 0 && (
+            <div className="mt-4 p-3 bg-green-50 border border-green-300 rounded">
+              <p className="font-semibold text-green-700">Se aplicaron {appliedFixes.length} ajustes automáticos:</p>
+              <div className="space-y-1 mt-2 text-sm">
+                {appliedFixes.map((fix: AppliedFix, idx: number) => (
+                  <p key={idx} className="text-gray-700">
+                    • Segmento {fix.segmentId}: {fix.suggestion.action.toUpperCase()} ({(fix.suggestion.confidence * 100).toFixed(0)}%)
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* FASE 1: Configuración de Segmentos */}
       {!analyzed && (

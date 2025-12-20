@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { LCG } from '../../../core/random/lcg';
 
 export default function PruebasAleatoriedad() {
@@ -163,7 +163,7 @@ export default function PruebasAleatoriedad() {
   };
 
   // Aproximación de valor crítico chi-cuadrado
-  const chiSquareCritical = (df: number, alpha: number): number => {
+  const chiSquareCritical = (df: number, _alpha: number): number => {
     // Aproximación simplificada para α=0.05
     const criticalValues: { [key: number]: number } = {
       1: 3.841, 2: 5.991, 3: 7.815, 4: 9.488, 5: 11.070,
