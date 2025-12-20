@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
+import Conceptos from "./modules/conceptos/Conceptos.tsx";
+import ComposicionView from "./modules/simulacion/ComposicionView.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
 import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
@@ -79,6 +81,7 @@ export default function AppRoutes() {
       <Route path="/simulacion/aplicacion/ejercicio-6" element={ <LayoutAplicacion> <SimulacionEjercicio6 /> </LayoutAplicacion> } />
 
       <Route path="/simulacion/aplicacion/ejercicio-7" element={ <LayoutAplicacion> <SimulacionEjercicio7 /> </LayoutAplicacion> } />
+      <Route path="/simulacion/composicion" element={<ComposicionView />} />
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );
