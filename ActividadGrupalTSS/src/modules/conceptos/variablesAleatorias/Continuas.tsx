@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight} from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import { Line } from 'react-chartjs-2';
@@ -15,7 +13,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
-
+import { BotonVolver } from '../components/BotonVolver';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 export default function VariablesContinuas() {
@@ -71,25 +69,13 @@ export default function VariablesContinuas() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
+
+        <div className="print:hidden"> 
+           <BotonVolver />
+        </div>
       <div className="max-w-4xl mx-auto space-y-6">
         
-        {/* Navegación */}
-        <div className="flex items-center justify-between">
-          <Link 
-            to="/conceptos/variables-aleatorias/discretas"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Anterior
-          </Link>
-          <Link 
-            to="/conceptos/funciones/pdf"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Siguiente: Función de Densidad
-            <ArrowRight size={20} />
-          </Link>
-        </div>
+       
 
         {/* Header */}
         <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-green-200">
@@ -438,23 +424,7 @@ export default function VariablesContinuas() {
           </ul>
         </div>
 
-        {/* Navegación inferior */}
-        <div className="flex items-center justify-between">
-          <Link 
-            to="/conceptos/variables-aleatorias/discretas"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Anterior
-          </Link>
-          <Link 
-            to="/conceptos/funciones/pdf"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Siguiente: Función de Densidad
-            <ArrowRight size={20} />
-          </Link>
-        </div>
+        
 
       </div>
     </div>

@@ -6,6 +6,8 @@ import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
 import ConceptosVariablesAleatorias from "./modules/conceptos/variablesAleatorias/Introduccion.tsx";
 import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discretas.tsx";
 import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
+import FuncionCDF from "./modules/conceptos/funciones/CDF.tsx";
+import FuncionPDF from "./modules/conceptos/funciones/PDF.tsx";
 
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
@@ -27,6 +29,7 @@ import SimulacionEjercicio6 from "./modules/simulacion/aplicacion/Ejercicio6.tsx
 import SimulacionEjercicio7 from "./modules/simulacion/aplicacion/Ejercicio7.tsx";
 
 
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,12 +38,18 @@ export default function AppRoutes() {
 
       <Route path="/" element={<Home />} />
       <Route path="/conceptos/variables-aleatorias" element={<ConceptosHome />} />
-      
+
       <Route path="/conceptos/variables-aleatorias/introduccion" element={<ConceptosVariablesAleatorias />} />
 
       <Route path="/conceptos/variables-aleatorias/discretas" element={<VariablesDiscretas />} />
 
       <Route path="/conceptos/variables-aleatorias/continuas" element={<VariablesContinuas />} />
+
+      <Route path="/conceptos/funciones/pdf" element={<FuncionPDF />} />
+
+      <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
+
+      
       
       {/* Rutas Específicas para Distribuciones */}
       <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution onCerrar={() => {}} />} />
