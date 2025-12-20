@@ -1,20 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Home, BookOpen, BarChart3, PlayCircle, HelpCircle, 
-  ChevronDown, Activity, TrendingUp, FlaskConical, BookCheck, Dice6, GamepadDirectional
-  Home, 
-  BookOpen, 
-  BarChart3, 
-  PlayCircle, 
-  HelpCircle, 
-  ChevronDown, 
-  ChevronRight,
-  Activity,     // Icono para discretas
-  TrendingUp,   // Icono para continuas
-  Layers,       // Icono para composición
-  RefreshCw,    // Icono para transformada inversa
-  Target        // Icono para rechazo
+import {
+  Activity,
+  BarChart3,
+  BookCheck,
+  BookOpen,
+  ChevronDown,
+  Dice6,
+  FlaskConical,
+  GamepadDirectional,
+  HelpCircle,
+  Home,
+  PlayCircle,
+  TrendingUp,
 } from "lucide-react";
 
 
@@ -25,16 +23,10 @@ export default function NavBar() {
   const isParentActive = location.pathname.includes("/distribuciones");
   const isSimParentActive = location.pathname.includes("/simulacion");
   const isConceptosActive = location.pathname.includes("/conceptos");
-  
+
   const [isDistOpen, setIsDistOpen] = useState(isParentActive);
   const [isSimOpen, setIsSimOpen] = useState(isSimParentActive);
   const [isConceptosOpen, setIsConceptosOpen] = useState(isConceptosActive);
-  // Estado para saber si el menú de distribuciones está abierto
-  // Truco: Si la URL actual incluye "distribuciones", lo iniciamos abierto
-  const [isDistOpen, setIsDistOpen] = useState(location.pathname.includes("distribuciones"));
-  
-  // Estado para el menú de simulación
-  const [isSimOpen, setIsSimOpen] = useState(location.pathname.includes("simulacion"));
 
   const isActive = (path: string) => location.pathname === path;
   
@@ -49,7 +41,7 @@ export default function NavBar() {
     if (isSimParentActive && !isSimOpen) {
       setIsSimOpen(true);
     }
-  }, [location.pathname]);
+  }, [isConceptosActive, isParentActive, isSimParentActive, isConceptosOpen, isDistOpen, isSimOpen, location.pathname]);
 
   return (
     <nav className="fixed left-0 top-0 h-screen w-80 bg-slate-800 text-white shadow-2xl flex flex-col overflow-y-auto z-50 sidebar-scroll">
@@ -96,6 +88,16 @@ export default function NavBar() {
                   <GamepadDirectional size={16} /> Ejercicios Interactivos
                 </Link>
               </li>
+              <li>
+                <Link to="/conceptos/pruebas-aleatoriedad" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/pruebas-aleatoriedad") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Activity size={16} /> Pruebas de Aleatoriedad
+                </Link>
+              </li>
+              <li>
+                <Link to="/conceptos/teoria-colas" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/teoria-colas") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <BarChart3 size={16} /> Teoría de Colas
+                </Link>
+              </li>
             </ul>
           </div>
         </li>
@@ -132,6 +134,12 @@ export default function NavBar() {
                   Exponencial
                 </Link>
               </li>
+              <li>
+                <Link to="/distribuciones/continuas/normal" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/normal") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <TrendingUp size={16} />
+                  Normal
+                </Link>
+              </li>
 
               <li><p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Discretas</p></li>
               <li>
@@ -145,20 +153,21 @@ export default function NavBar() {
                   Bernoulli
                 </Link>
               </li>
+              <li>
+                <Link to="/distribuciones/discretas/binomial" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/binomial") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Activity size={16} />
+                  Binomial
+                </Link>
+              </li>
             </ul>
           </div>
         </li>
 
         {/* --- SECCIÓN: SIMULACIÓN --- */}
         <li>
-          <button 
+          <button
             onClick={() => setIsSimOpen(!isSimOpen)}
             className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${isSimParentActive ? "bg-slate-700 text-yellow-300" : "hover:bg-slate-700"}`}
-        {/* --- SECCIÓN DESPLEGABLE: SIMULACIÓN --- */}
-        <li>
-          <button 
-            onClick={() => setIsSimOpen(!isSimOpen)}
-            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${location.pathname.includes("/simulacion") ? "bg-slate-700 text-yellow-300" : "hover:bg-slate-700"}`}
           >
             <div className="flex items-center gap-4">
               <PlayCircle size={20} />
@@ -170,31 +179,23 @@ export default function NavBar() {
           <div className={`grid transition-all duration-300 ease-in-out ${isSimOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
             <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
               <li>
-                <Link to="/simulacion/aplicacion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/aplicacion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                <Link
+                  to="/simulacion/aplicacion"
+                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/aplicacion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}
+                >
                   <FlaskConical size={16} /> Ejercicios Aplicación
                 </Link>
               </li>
               <li>
-                <Link to="/simulacion/teoricos" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                <Link
+                  to="/simulacion/teoricos"
+                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}
+                >
                   <BookCheck size={16} /> Ejercicios Teóricos
                 </Link>
               </li>
             </ul>
           </div>
-            {isSimOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          </button>
-
-          {/* Sub-menú */}
-          {isSimOpen && (
-            <ul className="mt-2 ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
-              <li>
-                <Link to="/simulacion/composicion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/composicion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <Layers size={16} />
-                  MÉTODO DE COMPOSICIÓN
-                </Link>
-              </li>
-            </ul>
-          )}
         </li>
         {/* ------------------------------------------- */}
 
