@@ -2,13 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
 
+//Conceptos
 import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
 import ConceptosVariablesAleatorias from "./modules/conceptos/variablesAleatorias/Introduccion.tsx";
 import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discretas.tsx";
 import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
-import FuncionCDF from "./modules/conceptos/funciones/CDF.tsx";
-import FuncionPDF from "./modules/conceptos/funciones/PDF.tsx";
+import FuncionCDF from "./modules/conceptos/variablesAleatorias/funciones/CDF.tsx";
+import FuncionPDF from "./modules/conceptos/variablesAleatorias/funciones/PDF.tsx";
 
+//Ejercicios Interactivos
+import EjerciciosInteractivos from "./modules/conceptos/EjerciciosInteractivos/Inicio.tsx";
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./core/distributions/PoissonDistribution/PoissonDistribution.tsx";
@@ -49,7 +52,9 @@ export default function AppRoutes() {
 
       <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
 
-      
+      <Route path="/conceptos/ejercicios-interactivos" element={<EjerciciosInteractivos />} />
+
+
       
       {/* Rutas Específicas para Distribuciones */}
       <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution onCerrar={() => {}} />} />
