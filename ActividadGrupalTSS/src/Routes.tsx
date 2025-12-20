@@ -1,7 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
-import Conceptos from "./modules/conceptos/Conceptos.tsx";
 import Ayuda from "./pages/Ayuda.tsx";
+
+import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
+import ConceptosVariablesAleatorias from "./modules/conceptos/variablesAleatorias/Introduccion.tsx";
+import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discretas.tsx";
+import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
 
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
@@ -22,11 +26,21 @@ import SimulacionEjercicio5 from "./modules/simulacion/aplicacion/Ejercicio5.tsx
 import SimulacionEjercicio6 from "./modules/simulacion/aplicacion/Ejercicio6.tsx";
 import SimulacionEjercicio7 from "./modules/simulacion/aplicacion/Ejercicio7.tsx";
 
+
 export default function AppRoutes() {
   return (
     <Routes>
+
+
+
       <Route path="/" element={<Home />} />
-      <Route path="/conceptos" element={<Conceptos />} />
+      <Route path="/conceptos/variables-aleatorias" element={<ConceptosHome />} />
+      
+      <Route path="/conceptos/variables-aleatorias/introduccion" element={<ConceptosVariablesAleatorias />} />
+
+      <Route path="/conceptos/variables-aleatorias/discretas" element={<VariablesDiscretas />} />
+
+      <Route path="/conceptos/variables-aleatorias/continuas" element={<VariablesContinuas />} />
       
       {/* Rutas Específicas para Distribuciones */}
       <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution onCerrar={() => {}} />} />

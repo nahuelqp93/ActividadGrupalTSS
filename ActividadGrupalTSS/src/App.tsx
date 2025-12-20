@@ -7,7 +7,7 @@ function App() {
     <BrowserRouter>
       <NavBar />
       {/* Eliminamos el px-6 y dejamos que el layout maneje el ancho */}
-      <div className="ml-64 min-h-screen bg-slate-50"> 
+      <div className="ml-80 min-h-screen bg-slate-50"> 
         <AppRoutes />
       </div>
     </BrowserRouter>

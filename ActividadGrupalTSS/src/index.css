@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+/* Barra de desplazamiento personalizada para el sidebar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px; /* Ancho muy delgado */
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent; /* Fondo transparente */
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: #475569; /* Un color gris pizarra (slate-600) */
+  border-radius: 20px; /* Bordes redondeados */
+}
+
+/* Soporte para Firefox */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
+}
