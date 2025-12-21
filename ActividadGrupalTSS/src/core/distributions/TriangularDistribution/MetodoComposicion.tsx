@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { evaluate } from 'mathjs';
+import { useNavigate } from 'react-router-dom';
 import type { SamplePoint } from '../../../core/types/Sample';
 import SampleTable from '../../../components/common/SampleTable';
 import 'katex/dist/katex.min.css';
@@ -15,6 +16,8 @@ interface ComponenteComposicion {
 }
 
 export default function MetodoComposicion() {
+  const navigate = useNavigate();
+  
   // Ejemplo del documento: Distribución triangular dividida en 2 partes
   const [a, setA] = useState(190);
   const [b, setB] = useState(210);
@@ -287,7 +290,7 @@ export default function MetodoComposicion() {
            Método de Composición
         </h2>
         
-        <div className="bg-purple-50 border-l-4 border-black p-4">
+        <div className="bg-purple-50 border-l-4 border-black p-4 mb-4">
           <p className="text-sm font-semibold mb-2">
              Algoritmo según el documento 
           </p>
@@ -300,6 +303,27 @@ export default function MetodoComposicion() {
             <li><strong>Paso 6:</strong> Escoger subfunción con <InlineMath math="R_1" /></li>
             <li><strong>Paso 7:</strong> Aplicar Transformada Inversa con <InlineMath math="R_2" /></li>
           </ol>
+        </div>
+
+        {/* Botón para herramienta dinámica */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Herramienta Interactiva Avanzada</h3>
+              <p className="text-sm text-gray-700 mb-1">
+                Resuelve ejercicios de composición con <strong>cualquier tipo de función a trozos</strong>
+              </p>
+              <p className="text-xs text-gray-600">
+                Define tus propios segmentos, fórmulas arbitrarias y visualiza el proceso completo paso a paso
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/simulacion/composicion')}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Abrir Herramienta →
+            </button>
+          </div>
         </div>
       </div>
 
