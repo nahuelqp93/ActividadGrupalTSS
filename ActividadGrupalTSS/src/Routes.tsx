@@ -15,6 +15,8 @@ import EjercicicioComposicion1 from "./modules/conceptos/EjerciciosInteractivos/
 import EjercicicioRechazo1 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo1.tsx";
 import EjercicicioRechazo2 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo2.tsx";
 import EjercicioColas24 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-4.tsx";
+import EjercicioColas25 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-5.tsx";
+import EjercicioColas26 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicios2-6.tsx";
 
 
 import PruebasAleatoriedad from "./modules/conceptos/pruebasAleatoriedad/PruebasAleatoriedad.tsx";
@@ -70,6 +72,8 @@ export default function AppRoutes() {
       <Route path="/conceptos/ejercicios/rechazo" element={<EjercicicioRechazo1 />} />
       <Route path="/conceptos/ejercicios/rechazo2" element={<EjercicicioRechazo2 />} />
       <Route path="/conceptos/ejercicios/colas-renta-autos" element={<EjercicioColas24 />} />
+      <Route path="/conceptos/ejercicios/interferencia-flecha" element={<EjercicioColas25 />} />
+      <Route path="/conceptos/ejercicios/politicas-inventario" element={<EjercicioColas26 />} />
 
 
       <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />

@@ -89,11 +89,22 @@ export const categorias: Categoria[] = [
         capacidad: '6 Lugares'
       },
       {
-        nombre: 'Renta de Autos (Simulación Monte Carlo)',
+        nombre: 'Renta de Autos',
         descripcion: 'Determinar el número óptimo de autos a comprar mediante simulación.',
         ruta: '/conceptos/ejercicios/colas-renta-autos',
         tipo: 'Optimización',
-        método: 'Monte Carlo'
+      },
+      {
+        nombre: 'Interferencia Flecha-Cojinete',
+        descripcion: 'Calcular la probabilidad de interferencia en un ensamble usando distribuciones normales.',
+        ruta: '/conceptos/ejercicios/interferencia-flecha',
+        tipo: 'Control de Calidad',
+      },
+      {
+        nombre: 'Políticas de Inventario',
+        descripcion: 'Comparar dos estrategias de reabastecimiento para identificar la mas economica.',
+        ruta: '/conceptos/ejercicios/politicas-inventario',
+        tipo: 'Optimización',
       }
     ]
   }
