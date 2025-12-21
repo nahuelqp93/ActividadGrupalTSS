@@ -105,6 +105,12 @@ export const categorias: Categoria[] = [
         descripcion: 'Comparar dos estrategias de reabastecimiento para identificar la mas economica.',
         ruta: '/conceptos/ejercicios/politicas-inventario',
         tipo: 'Optimización',
+      },
+      {
+        nombre: 'Políticas de Mantenimiento',
+        descripcion: 'Determinar la política más económica para reemplazo de componentes electrónicos.',
+        ruta: '/conceptos/ejercicios/mantenimiento-componentes',
+        tipo: 'Optimización',
       }
     ]
   }
