@@ -12,6 +12,9 @@ import FuncionCDF from "./modules/conceptos/variablesAleatorias/funciones/CDF.ts
 import FuncionPDF from "./modules/conceptos/variablesAleatorias/funciones/PDF.tsx";
 //Conceptos ejericicios
 import EjercicicioComposicion1 from "./modules/conceptos/EjerciciosInteractivos/composicion/composicion1.tsx";
+import EjercicicioRechazo1 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo1.tsx";
+import EjercicicioRechazo2 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo2.tsx";
+import EjercicioColas24 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-4.tsx";
 
 
 import PruebasAleatoriedad from "./modules/conceptos/pruebasAleatoriedad/PruebasAleatoriedad.tsx";
@@ -64,6 +67,9 @@ export default function AppRoutes() {
 //Ejercicios
       <Route path="/conceptos/ejercicios-interactivos" element={<EjerciciosInteractivos />} />
       <Route path="/conceptos/ejercicios-interactivos/composicion" element={<EjercicicioComposicion1 />} />
+      <Route path="/conceptos/ejercicios/rechazo" element={<EjercicicioRechazo1 />} />
+      <Route path="/conceptos/ejercicios/rechazo2" element={<EjercicicioRechazo2 />} />
+      <Route path="/conceptos/ejercicios/colas-renta-autos" element={<EjercicioColas24 />} />
 
 
       <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />

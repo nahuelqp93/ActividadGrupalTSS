@@ -50,6 +50,13 @@ export const categorias: Categoria[] = [
         ruta: '/conceptos/ejercicios/rechazo',
         metodo: 'Rechazo',
         distribucion: 'Variable Arbitraria'
+      },
+      {
+        nombre: 'Método de Rechazo (Caso 2)',
+        descripcion: 'Algoritmo de Aceptación-Rechazo con función lineal decreciente.',
+        ruta: '/conceptos/ejercicios/rechazo2',
+        metodo: 'Rechazo',
+        distribucion: 'Función Mixta'
       }
     ]
   },
@@ -80,6 +87,13 @@ export const categorias: Categoria[] = [
         ruta: '/conceptos/ejercicios/capacidad-limitada',
         tipo: 'Bloqueo',
         capacidad: '6 Lugares'
+      },
+      {
+        nombre: 'Renta de Autos (Simulación Monte Carlo)',
+        descripcion: 'Determinar el número óptimo de autos a comprar mediante simulación.',
+        ruta: '/conceptos/ejercicios/colas-renta-autos',
+        tipo: 'Optimización',
+        método: 'Monte Carlo'
       }
     ]
   }
