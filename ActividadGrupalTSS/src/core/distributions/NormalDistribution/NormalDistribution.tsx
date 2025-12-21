@@ -192,7 +192,7 @@ export default function NormalDistribution() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Estadísticas Empíricas vs Teóricas</h2>
             
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+              <div className="bg-linear-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
                 <div className="text-sm font-semibold text-gray-600 mb-1">Media</div>
                 <div className="text-2xl font-bold text-blue-700">
                   {stats.mean.toFixed(4)}
@@ -202,7 +202,7 @@ export default function NormalDistribution() {
                 </div>
               </div>
               
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+              <div className="bg-linear-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
                 <div className="text-sm font-semibold text-gray-600 mb-1">Varianza</div>
                 <div className="text-2xl font-bold text-green-700">
                   {stats.variance.toFixed(4)}
@@ -212,7 +212,7 @@ export default function NormalDistribution() {
                 </div>
               </div>
               
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
+              <div className="bg-linear-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
                 <div className="text-sm font-semibold text-gray-600 mb-1">Desviación Estándar</div>
                 <div className="text-2xl font-bold text-purple-700">
                   {stats.stdDev.toFixed(4)}

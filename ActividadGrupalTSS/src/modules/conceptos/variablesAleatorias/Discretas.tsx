@@ -22,7 +22,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { BotonVolver } from '../components/BotonVolver';
+import { BotonVolver } from './components/BotonVolver';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function VariablesDiscretas() {

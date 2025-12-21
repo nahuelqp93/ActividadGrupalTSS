@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
-import { BotonVolver } from '../components/BotonVolver';
+import { BotonVolver } from './components/BotonVolver';
 export default function IntroduccionVA() {
   const [dadoResultado, setDadoResultado] = useState<number | null>(null);
   const [lanzamientos, setLanzamientos] = useState<number[]>([]);

@@ -263,37 +263,37 @@ export default function TeoriaColas() {
               <h2 className="text-2xl font-bold text-gray-800 mb-4">Métricas de Desempeño</h2>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Clientes en Sistema (L)</div>
                   <div className="text-3xl font-bold text-blue-700">{results.L.toFixed(4)}</div>
                   <div className="text-xs text-gray-500 mt-1">clientes</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Clientes en Cola (Lq)</div>
                   <div className="text-3xl font-bold text-green-700">{results.Lq.toFixed(4)}</div>
                   <div className="text-xs text-gray-500 mt-1">clientes</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Tiempo en Sistema (W)</div>
                   <div className="text-3xl font-bold text-purple-700">{results.W.toFixed(4)}</div>
                   <div className="text-xs text-gray-500 mt-1">horas</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-yellow-50 to-yellow-100 border border-yellow-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Tiempo en Cola (Wq)</div>
                   <div className="text-3xl font-bold text-yellow-700">{results.Wq.toFixed(4)}</div>
                   <div className="text-xs text-gray-500 mt-1">horas</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-red-50 to-red-100 border border-red-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Sistema Vacío (P₀)</div>
                   <div className="text-3xl font-bold text-red-700">{(results.P0 * 100).toFixed(2)}%</div>
                   <div className="text-xs text-gray-500 mt-1">probabilidad</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200 rounded-lg p-4">
+                <div className="bg-linear-to-br from-indigo-50 to-indigo-100 border border-indigo-200 rounded-lg p-4">
                   <div className="text-sm font-semibold text-gray-600 mb-1">Utilización (ρ)</div>
                   <div className="text-3xl font-bold text-indigo-700">{(results.rho * 100).toFixed(2)}%</div>
                   <div className="text-xs text-gray-500 mt-1">del servidor</div>

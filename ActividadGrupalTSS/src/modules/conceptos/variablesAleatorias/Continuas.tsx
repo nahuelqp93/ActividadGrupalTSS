@@ -13,7 +13,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
-import { BotonVolver } from '../components/BotonVolver';
+import { BotonVolver } from './components/BotonVolver';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 export default function VariablesContinuas() {

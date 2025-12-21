@@ -201,7 +201,7 @@ export default function BinomialDistribution() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Comparación: Empírico vs Teórico</h2>
             
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+              <div className="bg-linear-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
                 <div className="text-sm font-semibold text-gray-600 mb-1">Media (E[X])</div>
                 <div className="text-2xl font-bold text-blue-700">
                   Empírica: {stats.mean.toFixed(4)}
@@ -214,7 +214,7 @@ export default function BinomialDistribution() {
                 </div>
               </div>
               
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+              <div className="bg-linear-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
                 <div className="text-sm font-semibold text-gray-600 mb-1">Varianza (Var[X])</div>
                 <div className="text-2xl font-bold text-green-700">
                   Empírica: {stats.variance.toFixed(4)}
