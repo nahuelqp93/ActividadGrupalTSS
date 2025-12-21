@@ -22,6 +22,9 @@ import TeoriaColas from "./modules/conceptos/teoriaColas/TeoriaColas.tsx";
 
 //Ejercicios Interactivos
 import EjerciciosInteractivos from "./modules/conceptos/EjerciciosInteractivos/Inicio.tsx";
+import EjercicioColaInteractivo from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioColasSerie.tsx";
+import EjercicioMultiservidor from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioColaMultiservidor.tsx"
+import EjercicioParking from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioParking.tsx";
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./core/distributions/PoissonDistribution/PoissonDistribution.tsx";
@@ -54,15 +57,10 @@ export default function AppRoutes() {
 
       <Route path="/" element={<Home />} />
       <Route path="/conceptos/variables-aleatorias" element={<ConceptosHome />} />
-
       <Route path="/conceptos/variables-aleatorias/introduccion" element={<ConceptosVariablesAleatorias />} />
-
       <Route path="/conceptos/variables-aleatorias/discretas" element={<VariablesDiscretas />} />
-
       <Route path="/conceptos/variables-aleatorias/continuas" element={<VariablesContinuas />} />
-
       <Route path="/conceptos/funciones/pdf" element={<FuncionPDF />} />
-
       <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
 //Ejercicios
       <Route path="/conceptos/ejercicios-interactivos" element={<EjerciciosInteractivos />} />
@@ -70,12 +68,13 @@ export default function AppRoutes() {
       <Route path="/conceptos/ejercicios/rechazo" element={<EjercicicioRechazo1 />} />
       <Route path="/conceptos/ejercicios/rechazo2" element={<EjercicicioRechazo2 />} />
       <Route path="/conceptos/ejercicios/colas-renta-autos" element={<EjercicioColas24 />} />
+      <Route path="/conceptos/ejercicios-interactivos/colas-serie" element={<EjercicioColaInteractivo />} />
+      <Route path="/conceptos/ejercicios-interactivos/multiservidor" element={<EjercicioMultiservidor />} />
+      <Route path="/conceptos/ejercicios-interactivos/parking" element={<EjercicioParking />} />
 
 
       <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />
-
       <Route path="/conceptos/teoria-colas" element={<TeoriaColas />} />
-
       <Route path="/simulacion/composicion" element={<ComposicionView />} />
 
       
