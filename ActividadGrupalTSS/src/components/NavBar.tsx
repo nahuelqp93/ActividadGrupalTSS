@@ -84,7 +84,7 @@ export default function NavBar() {
                 </Link>
               </li>
               <li>
-                <Link to="/conceptos/ejercicios" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${location.pathname.includes("/conceptos/ejercicios") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                <Link to="/conceptos/ejercicios-interactivos" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${location.pathname.includes("/conceptos/ejercicios") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <GamepadDirectional size={16} /> Ejercicios Interactivos
                 </Link>
               </li>

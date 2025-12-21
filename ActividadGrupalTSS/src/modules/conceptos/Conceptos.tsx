@@ -1,7 +1,7 @@
 ﻿import { Link } from 'react-router-dom';
 import { BookOpen, ChevronRight, GraduationCap, Lightbulb } from 'lucide-react';
 // Importamos los datos del archivo que creamos arriba
-import { sections } from './data/conceptos.data.ts';
+import { sections } from './variablesAleatorias/data/conceptos.data.ts';
 
 export default function Conceptos() {
 

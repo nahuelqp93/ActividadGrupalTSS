@@ -541,7 +541,7 @@ export default function ComposicionView() {
           {/* PASOS 1-6 */}
           <div className="space-y-4">
             {/* PASO 1: Dividir en Subáreas */}
-            <div className="bg-white border-l-4 border-red-500 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-red-500 border  rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 1: Dividir f(x) en Subáreas</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
                 {analysis.areas.map((area, idx) => (
@@ -565,7 +565,7 @@ export default function ComposicionView() {
             </div>
 
             {/* PASO 2: Determinar Subfunciones */}
-            <div className="bg-white border-l-4 border-orange-500 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-orange-500 border rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 2: Determinar las Subfunciones fᵢ(x)</h3>
               <div className="space-y-3">
                 {analysis.segments.map((seg, idx) => (
@@ -580,7 +580,7 @@ export default function ComposicionView() {
             </div>
 
             {/* PASO 3: Expresión Total */}
-            <div className="bg-white border-l-4 border-green-600 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-green-600 border rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 3: Expresar la Función Original</h3>
               <div className="bg-gray-50 p-6 rounded border border-gray-300">
                 <p className="font-semibold text-gray-800 text-base mb-3">
@@ -600,7 +600,7 @@ export default function ComposicionView() {
             </div>
 
             {/* PASO 4: Probabilidades Acumuladas */}
-            <div className="bg-white border-l-4 border-blue-600 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-blue-600 border  rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 4: Relación Gráfica - Probabilidades Acumuladas</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -650,7 +650,7 @@ export default function ComposicionView() {
             </div>
 
             {/* PASO 5: Generación de Números Aleatorios */}
-            <div className="bg-white border-l-4 border-pink-600 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-pink-600 border  rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 5: Generar R1 y R2</h3>
               <div className="bg-gray-50 p-4 rounded border border-gray-300">
                 <p className="font-mono text-sm text-gray-800 space-y-1">
@@ -667,7 +667,7 @@ export default function ComposicionView() {
             </div>
 
             {/* PASO 6: Seleccionar Función y Calcular X */}
-            <div className="bg-white border-l-4 border-purple-600 border border-gray-300 rounded-lg p-6">
+            <div className="bg-white border-l-4 border-purple-600 border rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Paso 6: Seleccionar Función y Calcular X</h3>
               <div className="bg-gray-50 p-4 rounded border border-gray-300 text-sm font-mono text-gray-800 mb-4">
                 <p>Basado en R1:</p>
