@@ -70,21 +70,21 @@ export const categorias: Categoria[] = [
       {
         nombre: 'Colas en Serie',
         descripcion: 'Flujo secuencial con llegadas Poisson y tiempos de servicio heterogéneos.',
-        ruta: '/conceptos/ejercicios/colas-serie',
+        ruta: '/conceptos/ejercicios-interactivos/colas-serie',
         tipo: 'Serie',
         configuracion: '2 Estaciones'
       },
       {
         nombre: 'Sistema Multi-servidor',
         descripcion: 'Banco con cola única y múltiples servidores trabajando en paralelo.',
-        ruta: '/conceptos/ejercicios/multiservidor',
+        ruta: '/conceptos/ejercicios-interactivos/multiservidor',
         tipo: 'Paralelo',
         servidores: '3 Cajeros'
       },
       {
         nombre: 'Capacidad Limitada',
         descripcion: 'Sistema con rechazo de clientes por saturación de espacio (Parking).',
-        ruta: '/conceptos/ejercicios/capacidad-limitada',
+        ruta: '/conceptos/ejercicios-interactivos/parking',
         tipo: 'Bloqueo',
         capacidad: '6 Lugares'
       },
