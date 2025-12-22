@@ -62,8 +62,8 @@ export const categorias: Categoria[] = [
   },
   {
     id: 2,
-    titulo: 'Modelado de Sistemas de Colas',
-    descripcion: 'Simulación de eventos discretos para analizar cuellos de botella y tiempos de espera.',
+    titulo: 'Aplicaciones de Simulacion',
+    descripcion: 'Simulación de eventos discretos.',
     icon: Users,
     theme: 'emerald',
     ejercicios: [
