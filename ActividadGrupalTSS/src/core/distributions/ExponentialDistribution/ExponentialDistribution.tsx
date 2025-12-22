@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import { useLCG } from '../../random/useLCG';
 import { DistributionChart } from '../utils/DistributionChart'; // Reutilizamos tu componente gráfico
 import { SimulationTable } from '../utils/SimulationTable';   // Reutilizamos tu tabla
+import { ExplicacionExponencial } from './ExplicacionExponencial';
 
 interface ExponentialRow {
   u: number;
@@ -110,7 +111,7 @@ const ExponentialSimulation: React.FC = () => {
         
         {/* COLUMNA IZQUIERDA: Contexto Matemático y Controles */}
         <div className="lg:col-span-1 space-y-6">
-          
+          <ExplicacionExponencial />
           {/* TARJETA DE CONTEXTO TEÓRICO */}
           <div className="bg-gray-50 p-5 rounded border border-gray-200 text-sm shadow-sm">
             <h3 className="text-xs font-bold uppercase text-gray-700 mb-3 tracking-wider border-b border-gray-200 pb-2">

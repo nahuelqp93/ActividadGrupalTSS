@@ -1,6 +1,15 @@
-import { useState } from 'react';
-import { ArrowLeft, ArrowRight, Coins } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { 
+  Coins, 
+  BarChart3, 
+  Calculator, 
+  Factory, 
+  Phone, 
+  ArrowDownCircle,
+  Sigma,
+  CheckCircle2,
+  RefreshCcw
+} from 'lucide-react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import { Bar } from 'react-chartjs-2';
@@ -13,406 +22,342 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-
+import { BotonVolver } from './components/BotonVolver';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function VariablesDiscretas() {
-  const [numMonedas, setNumMonedas] = useState(3);
+  const [numMonedas, setNumMonedas] = useState(4); // Empezamos con 4 para ver mejor la curva
   const [simulaciones, setSimulaciones] = useState<number[]>([]);
-  const [mostrarResultados, setMostrarResultados] = useState(false);
+  const [totalLanzamientos, setTotalLanzamientos] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  const simularMonedas = () => {
-    const resultados: number[] = [];
-    for (let i = 0; i < 1000; i++) {
-      let caras = 0;
-      for (let j = 0; j < numMonedas; j++) {
-        if (Math.random() < 0.5) caras++;
-      }
-      resultados.push(caras);
-    }
-    setSimulaciones(resultados);
-    setMostrarResultados(true);
-  };
+  // --- LÓGICA MATEMÁTICA ---
 
-  // Calcular frecuencias
-  const frecuencias = Array(numMonedas + 1).fill(0);
-  simulaciones.forEach(x => frecuencias[x]++);
-  const probabilidadesEmpiricas = frecuencias.map(f => f / simulaciones.length);
-
-  // Probabilidades teóricas (binomial)
+  // 1. Calcular Binomial (Teoría)
   const calcularBinomial = (n: number, k: number, p: number) => {
     const combinatorio = (n: number, k: number): number => {
+      if (k < 0 || k > n) return 0;
       if (k === 0 || k === n) return 1;
-      let result = 1;
-      for (let i = 0; i < k; i++) {
-        result *= (n - i);
-        result /= (i + 1);
-      }
-      return result;
+      if (k > n / 2) k = n - k;
+      let res = 1;
+      for (let i = 1; i <= k; i++) res = res * (n - i + 1) / i;
+      return res;
     };
     return combinatorio(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
   };
 
-  const probabilidadesTeoricasArray = Array(numMonedas + 1)
-    .fill(0)
-    .map((_, k) => calcularBinomial(numMonedas, k, 0.5));
+  const probTeoricas = useMemo(() => 
+    Array(numMonedas + 1).fill(0).map((_, k) => calcularBinomial(numMonedas, k, 0.5)),
+  [numMonedas]);
+
+  // 2. Simulación (Práctica)
+  const simularLote = () => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      const nuevosResultados: number[] = [];
+      const N_SIMS = 500; // Simulamos por lotes para ver la evolución
+      
+      for (let i = 0; i < N_SIMS; i++) {
+        let caras = 0;
+        for (let j = 0; j < numMonedas; j++) {
+          if (Math.random() < 0.5) caras++;
+        }
+        nuevosResultados.push(caras);
+      }
+      
+      setSimulaciones(prev => [...prev, ...nuevosResultados]);
+      setTotalLanzamientos(prev => prev + N_SIMS);
+      setIsAnimating(false);
+    }, 500);
+  };
+
+  const resetear = () => {
+    setSimulaciones([]);
+    setTotalLanzamientos(0);
+  };
+
+  // 3. Procesar datos para la Gráfica
+  const probEmpiricas = useMemo(() => {
+    if (totalLanzamientos === 0) return Array(numMonedas + 1).fill(0);
+    const conteos = Array(numMonedas + 1).fill(0);
+    simulaciones.forEach(x => conteos[x]++);
+    return conteos.map(c => c / totalLanzamientos);
+  }, [simulaciones, totalLanzamientos, numMonedas]);
 
   const chartData = {
     labels: Array(numMonedas + 1).fill(0).map((_, i) => i.toString()),
     datasets: [
       {
-        label: 'Probabilidad Teórica',
-        data: probabilidadesTeoricasArray,
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        borderColor: 'rgb(59, 130, 246)',
-        borderWidth: 2
+        label: 'Teoría (Ideal)',
+        data: probTeoricas,
+        backgroundColor: 'rgba(99, 102, 241, 0.2)', // Indigo suave
+        borderColor: 'rgba(99, 102, 241, 1)',
+        borderWidth: 2,
+        borderRadius: 4,
+        borderSkipped: false,
       },
-      ...(mostrarResultados ? [{
-        label: 'Frecuencia Empírica',
-        data: probabilidadesEmpiricas,
-        backgroundColor: 'rgba(34, 197, 94, 0.5)',
-        borderColor: 'rgb(34, 197, 94)',
-        borderWidth: 2
-      }] : [])
+      {
+        label: 'Realidad (Empírica)',
+        data: probEmpiricas,
+        backgroundColor: 'rgba(16, 185, 129, 0.6)', // Emerald fuerte
+        borderColor: 'rgba(16, 185, 129, 1)',
+        borderWidth: 0,
+        borderRadius: 4,
+      }
     ]
   };
 
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top' as const },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `${context.dataset.label}: ${(context.raw * 100).toFixed(1)}%`
+        }
+      }
+    },
+    scales: {
+      y: { 
+        beginAtZero: true, 
+        title: { display: true, text: 'Probabilidad' },
+        grid: { color: '#f1f5f9' }
+      },
+      x: { 
+        title: { display: true, text: 'Número de Caras (k)' },
+        grid: { display: false }
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        
-        {/* Navegación */}
-        <div className="flex items-center justify-between">
-          <Link 
-            to="/conceptos/variables-aleatorias/introduccion"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Anterior
-          </Link>
-          <Link 
-            to="/conceptos/variables-aleatorias/continuas"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Siguiente: Variables Continuas
-            <ArrowRight size={20} />
-          </Link>
-        </div>
+    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
 
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-blue-200">
-          <h1 className="text-3xl font-bold text-blue-900 mb-2">
-            1.2 Variables Aleatorias Discretas
+<div className="print:hidden"> 
+           <BotonVolver />
+        </div>
+      <div className="max-w-6xl mx-auto space-y-10">
+
+        {/* --- HEADER --- */}
+        <header className="text-center space-y-4 py-6">
+          <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-full text-indigo-700 mb-2">
+            <BarChart3 size={32} />
+          </div>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+            Variables Aleatorias Discretas
           </h1>
-          <p className="text-gray-600">
-            Variables que toman valores contables o numerables
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            El mundo de los "saltos". Analizamos eventos que podemos contar uno a uno, como monedas, personas o defectos.
           </p>
-        </div>
+        </header>
 
-        {/* Definición */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Definición
-          </h2>
-
-          <div className="space-y-4">
-            <p className="text-gray-700">
-              Una variable aleatoria es <strong>discreta</strong> si toma un número contable (finito o infinito numerable) 
-              de valores distintos.
-            </p>
-
-            <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-              <p className="text-sm font-semibold text-blue-900 mb-2">Características:</p>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li>• Los valores son <strong>separados</strong> (no continuos)</li>
-                <li>• Se pueden <strong>enumerar</strong> o contar: x₁, x₂, x₃, ...</li>
-                <li>• Entre dos valores consecutivos no hay valores intermedios de la variable</li>
-                <li>• Ejemplos: 0, 1, 2, 3, ... o {`{1, 2, 3, 4, 5, 6}`}</li>
-              </ul>
-            </div>
+        {/* --- SECCIÓN 1: DEFINICIÓN VISUAL --- */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-indigo-900 p-6 text-white flex items-center gap-3">
+            <Sigma className="text-yellow-400" />
+            <h2 className="text-xl font-bold">Concepto Fundamental</h2>
           </div>
-        </div>
-
-        {/* Función de Masa de Probabilidad (PMF) */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-green-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Función de Masa de Probabilidad (PMF)
-          </h2>
-
-          <div className="space-y-4">
-            <p className="text-gray-700">
-              Para describir una variable aleatoria discreta usamos la <strong>Función de Masa de Probabilidad</strong> (PMF):
-            </p>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <BlockMath math="p(x) = P(X = x)" />
-              <p className="text-sm text-gray-600 text-center mt-2">
-                Probabilidad de que X tome exactamente el valor x
+          
+          <div className="p-8 grid md:grid-cols-2 gap-8 items-center">
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold text-slate-800">Lo contable vs. Lo medible</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Una variable es <strong>discreta</strong> cuando sus valores posibles son puntos aislados. Imagina una escalera: puedes estar en el escalón 1 o en el 2, pero no en el 1.5.
               </p>
-            </div>
-
-            <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-              <p className="text-sm font-semibold text-green-900 mb-3">Propiedades de la PMF:</p>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-700 mb-1"><strong>1. No negatividad:</strong></p>
-                  <BlockMath math="p(x) \geq 0 \quad \text{para todo } x" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-700 mb-1"><strong>2. Suma total igual a 1:</strong></p>
-                  <BlockMath math="\sum_{\text{todos los } x} p(x) = 1" />
+              
+              <div className="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500 mt-4">
+                <p className="font-bold text-indigo-900 mb-1">Función de Masa (PMF)</p>
+                <p className="text-sm text-indigo-800 mb-2">
+                  Es la regla que asigna a cada valor <InlineMath math="x" /> su "peso" en probabilidad.
+                </p>
+                <div className="bg-white p-2 rounded border border-indigo-100 text-center">
+                   <BlockMath math="p(x) = P(X = x)" />
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Ejemplos Clásicos */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Ejemplos Clásicos
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <h3 className="font-bold text-purple-900 mb-2">Lanzamiento de Dado</h3>
-              <p className="text-sm text-gray-700 mb-2">
-                <InlineMath math="X \in \{1, 2, 3, 4, 5, 6\}" />
-              </p>
-              <BlockMath math="P(X = k) = \frac{1}{6} \quad \text{para } k = 1,2,3,4,5,6" />
-            </div>
-
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h3 className="font-bold text-blue-900 mb-2">Número de Clientes</h3>
-              <p className="text-sm text-gray-700 mb-2">
-                <InlineMath math="N \in \{0, 1, 2, 3, \ldots\}" />
-              </p>
-              <p className="text-sm text-gray-600">
-                Puede seguir distribución Poisson
-              </p>
-            </div>
-
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h3 className="font-bold text-green-900 mb-2">Productos Defectuosos</h3>
-              <p className="text-sm text-gray-700 mb-2">
-                <InlineMath math="D \in \{0, 1, 2, \ldots, n\}" />
-              </p>
-              <p className="text-sm text-gray-600">
-                En una muestra de n productos
-              </p>
-            </div>
-
-            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-              <h3 className="font-bold text-yellow-900 mb-2">Caras en Monedas</h3>
-              <p className="text-sm text-gray-700 mb-2">
-                <InlineMath math="Y \in \{0, 1, 2, \ldots, n\}" />
-              </p>
-              <p className="text-sm text-gray-600">
-                Al lanzar n monedas
-              </p>
+            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+               <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Propiedades Clave</h4>
+               <ul className="space-y-4">
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1 bg-green-100 text-green-700 rounded-full p-1"><CheckCircle2 size={16}/></div>
+                    <div>
+                      <p className="font-bold text-slate-700">Valores Enumerables</p>
+                      <p className="text-sm text-slate-500">Conjunto finito o infinito contable {`{0, 1, 2, ...}`}.</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1 bg-green-100 text-green-700 rounded-full p-1"><CheckCircle2 size={16}/></div>
+                    <div>
+                      <p className="font-bold text-slate-700">Suma Unitaria</p>
+                      <p className="text-sm text-slate-500">La suma de todas las probabilidades es exactamente 1.</p>
+                      <InlineMath math="\sum p(x) = 1" />
+                    </div>
+                  </li>
+               </ul>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Simulación Interactiva */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-purple-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Simulación Interactiva: Lanzamiento de Monedas
-          </h2>
+        {/* --- SECCIÓN 2: LABORATORIO INTERACTIVO --- */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+              <Calculator className="text-indigo-600"/>
+              Laboratorio: Binomial (Monedas)
+            </h2>
+          </div>
 
-          <div className="space-y-4">
-            <p className="text-gray-700">
-              Definimos <InlineMath math="X" /> = "número de caras al lanzar {numMonedas} monedas"
-            </p>
-
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="flex items-center gap-4 flex-wrap">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Número de monedas (n):
-                  </label>
-                  <input
-                    type="number"
-                    value={numMonedas}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value);
-                      if (val >= 1 && val <= 10) {
-                        setNumMonedas(val);
-                        setMostrarResultados(false);
-                      }
-                    }}
-                    min="1"
-                    max="10"
-                    className="p-2 border border-gray-300 rounded-md w-24"
-                  />
-                </div>
-
-                <button
-                  onClick={simularMonedas}
-                  className="flex items-center gap-2 px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  <Coins size={20} />
-                  Simular 1000 Lanzamientos
-                </button>
-              </div>
-            </div>
-
-            {mostrarResultados && (
-              <>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm font-semibold text-gray-700 mb-3">
-                    Valores posibles: <InlineMath math={`X \\in \\{0, 1, 2, \\ldots, ${numMonedas}\\}`} />
-                  </p>
-                  <div className="h-64">
-                    <Bar 
-                      data={chartData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            title: {
-                              display: true,
-                              text: 'Probabilidad'
-                            }
-                          },
-                          x: {
-                            title: {
-                              display: true,
-                              text: 'Número de caras (X)'
-                            }
-                          }
-                        }
+          <div className="grid lg:grid-cols-3 gap-6">
+            
+            {/* PANEL DE CONTROL */}
+            <div className="lg:col-span-1 space-y-6">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <label className="block text-sm font-bold text-slate-700 mb-2">
+                  Configuración del Experimento
+                </label>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Número de monedas (n)</span>
+                      <span className="font-bold text-indigo-600">{numMonedas}</span>
+                    </div>
+                    <input 
+                      type="range" min="1" max="15" 
+                      value={numMonedas} 
+                      onChange={(e) => {
+                        setNumMonedas(Number(e.target.value));
+                        resetear();
                       }}
+                      className="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                     />
                   </div>
+                  
+                  {/* Visualización de monedas */}
+                  <div className="flex flex-wrap gap-1 py-2 justify-center bg-slate-50 rounded-lg min-h-15 items-center">
+                    {Array(numMonedas).fill(0).map((_, i) => (
+                      <Coins key={i} size={20} className="text-yellow-500 drop-shadow-sm" />
+                    ))}
+                  </div>
+
+                  <div className="pt-2 flex gap-2">
+                    <button
+                      onClick={simularLote}
+                      disabled={isAnimating}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 flex justify-center gap-2"
+                    >
+                      {isAnimating ? <RefreshCcw className="animate-spin"/> : <ArrowDownCircle />}
+                      Simular (+500)
+                    </button>
+                    
+                    {totalLanzamientos > 0 && (
+                      <button 
+                        onClick={resetear}
+                        className="px-4 py-3 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+                      >
+                        <RefreshCcw size={20} />
+                      </button>
+                    )}
+                  </div>
                 </div>
+              </div>
 
-                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="px-4 py-2 border-b">k (caras)</th>
-                        <th className="px-4 py-2 border-b">P(X = k) Teórica</th>
-                        <th className="px-4 py-2 border-b">Frecuencia Empírica</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array(numMonedas + 1).fill(0).map((_, k) => (
-                        <tr key={k} className={k % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-4 py-2 text-center border-b font-semibold">{k}</td>
-                          <td className="px-4 py-2 text-center border-b font-mono">
-                            {probabilidadesTeoricasArray[k].toFixed(4)}
-                          </td>
-                          <td className="px-4 py-2 text-center border-b font-mono text-green-700">
-                            {probabilidadesEmpiricas[k].toFixed(4)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot className="bg-gray-100 font-semibold">
-                      <tr>
-                        <td className="px-4 py-2 text-center">SUMA</td>
-                        <td className="px-4 py-2 text-center font-mono">
-                          {probabilidadesTeoricasArray.reduce((a, b) => a + b, 0).toFixed(4)}
-                        </td>
-                        <td className="px-4 py-2 text-center font-mono text-green-700">
-                          {probabilidadesEmpiricas.reduce((a, b) => a + b, 0).toFixed(4)}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
+              {/* Stats Rápidos */}
+              <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                <p className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">Total Simulaciones</p>
+                <p className="text-4xl font-black text-emerald-600">{totalLanzamientos.toLocaleString()}</p>
+                <p className="text-xs text-emerald-700 mt-2 leading-tight">
+                  Cuantos más lances, más se parecerá la barra verde (realidad) a la línea azul (teoría).
+                </p>
+              </div>
+            </div>
+
+            {/* GRÁFICA */}
+            <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-100">
+               
+               <div className="h-full w-full">
+                 <Bar data={chartData} options={chartOptions as any} />
+               </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* --- SECCIÓN 3: EJEMPLOS REALES --- */}
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+             <h2 className="text-2xl font-bold text-slate-800">Ejemplos del Mundo Real</h2>
+             <span className="h-px flex-1 bg-slate-200"></span>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+             <div className="group bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <Factory size={24} />
                 </div>
-              </>
-            )}
+                <h3 className="font-bold text-slate-800 text-lg mb-2">Control de Calidad</h3>
+                <p className="text-slate-500 text-sm mb-3">
+                  Número de piezas defectuosas en un lote de 100 productos.
+                </p>
+                <div className="text-xs font-mono bg-slate-50 p-2 rounded text-slate-600">
+                  X ∈ {`{0, 1, 2, ..., 100}`}
+                </div>
+             </div>
+
+             <div className="group bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                  <Phone size={24} />
+                </div>
+                <h3 className="font-bold text-slate-800 text-lg mb-2">Call Center</h3>
+                <p className="text-slate-500 text-sm mb-3">
+                  Número de llamadas recibidas en una hora específica.
+                </p>
+                <div className="text-xs font-mono bg-slate-50 p-2 rounded text-slate-600">
+                  X ∈ {`{0, 1, 2, 3, ...}`}
+                </div>
+             </div>
+
+             <div className="group bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                  <Coins size={24} />
+                </div>
+                <h3 className="font-bold text-slate-800 text-lg mb-2">Juegos de Azar</h3>
+                <p className="text-slate-500 text-sm mb-3">
+                  Número de veces que sale "Cara" al lanzar 5 monedas.
+                </p>
+                <div className="text-xs font-mono bg-slate-50 p-2 rounded text-slate-600">
+                   X ∼ Binomial(n=5, p=0.5)
+                </div>
+             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Cálculo de Probabilidades */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Cálculo de Probabilidades
-          </h2>
-
-          <div className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="font-semibold text-blue-900 mb-2">Probabilidad puntual:</p>
-              <BlockMath math="P(X = 3)" />
-              <p className="text-sm text-gray-600">
-                Probabilidad de que X tome exactamente el valor 3
-              </p>
-            </div>
-
-            <div className="bg-green-50 p-4 rounded-lg">
-              <p className="font-semibold text-green-900 mb-2">Probabilidad acumulada:</p>
-              <BlockMath math="P(X \leq 3) = P(X=0) + P(X=1) + P(X=2) + P(X=3)" />
-              <p className="text-sm text-gray-600">
-                Suma de probabilidades hasta el valor 3
-              </p>
-            </div>
-
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <p className="font-semibold text-purple-900 mb-2">Probabilidad en intervalo:</p>
-              <BlockMath math="P(2 \leq X \leq 5) = P(X=2) + P(X=3) + P(X=4) + P(X=5)" />
-              <p className="text-sm text-gray-600">
-                Suma de probabilidades en el rango
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Conceptos Clave */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-yellow-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Conceptos Clave
-          </h2>
-
-          <ul className="space-y-3 text-gray-700">
-            <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold text-xl">•</span>
-              <div>
-                <strong>Valores contables:</strong> Se pueden enumerar (finitos o infinitos)
+        {/* --- SECCIÓN 4: CÁLCULOS (BENTO GRID) --- */}
+        <section className="bg-slate-100 rounded-3xl p-8">
+           <h2 className="text-xl font-bold text-slate-800 mb-6 text-center">¿Qué preguntas podemos responder?</h2>
+           <div className="grid md:grid-cols-3 gap-4">
+              
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div className="text-xs font-bold text-indigo-500 uppercase mb-2">Puntual</div>
+                <div className="mb-2"><BlockMath math="P(X = 3)" /></div>
+                <p className="text-sm text-slate-600">¿Cuál es la probabilidad de obtener <strong>exactamente</strong> 3 caras?</p>
               </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold text-xl">•</span>
-              <div>
-                <strong>PMF:</strong> Función de masa de probabilidad <InlineMath math="p(x) = P(X=x)" />
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold text-xl">•</span>
-              <div>
-                <strong>Suma = 1:</strong> La suma de todas las probabilidades es 1
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold text-xl">•</span>
-              <div>
-                <strong>P(X=x) &gt; 0:</strong> Tiene sentido calcular la probabilidad de un valor específico
-              </div>
-            </li>
-          </ul>
-        </div>
 
-        {/* Navegación inferior */}
-        <div className="flex items-center justify-between">
-          <Link 
-            to="/conceptos/variables-aleatorias/introduccion"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Anterior
-          </Link>
-          <Link 
-            to="/conceptos/variables-aleatorias/continuas"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Siguiente: Variables Continuas
-            <ArrowRight size={20} />
-          </Link>
-        </div>
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div className="text-xs font-bold text-emerald-500 uppercase mb-2">Acumulada</div>
+                <div className="mb-2"><BlockMath math="P(X \leq 2)" /></div>
+                <p className="text-sm text-slate-600">¿Probabilidad de obtener <strong>como máximo</strong> 2 caras?</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div className="text-xs font-bold text-purple-500 uppercase mb-2">Intervalo</div>
+                <div className="mb-2"><BlockMath math="P(2 \leq X \leq 4)" /></div>
+                <p className="text-sm text-slate-600">¿Probabilidad de estar <strong>entre</strong> 2 y 4 caras?</p>
+              </div>
+
+           </div>
+        </section>
 
       </div>
     </div>

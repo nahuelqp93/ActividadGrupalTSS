@@ -1,22 +1,46 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
+
 import Ayuda from "./pages/Ayuda.tsx";
 
+//Conceptos
 import ConceptosHome from "./modules/conceptos/Conceptos.tsx";
 import ConceptosVariablesAleatorias from "./modules/conceptos/variablesAleatorias/Introduccion.tsx";
 import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discretas.tsx";
 import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
+import FuncionCDF from "./modules/conceptos/variablesAleatorias/funciones/CDF.tsx";
+import FuncionPDF from "./modules/conceptos/variablesAleatorias/funciones/PDF.tsx";
+//Conceptos ejericicios
+import EjercicicioComposicion1 from "./modules/conceptos/EjerciciosInteractivos/composicion/composicion1.tsx";
+import EjercicicioRechazo1 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo1.tsx";
+import EjercicicioRechazo2 from "./modules/conceptos/EjerciciosInteractivos/rechazo/rechazo2.tsx";
+import EjercicioColas24 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-4.tsx";
+import EjercicioColas25 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-5.tsx";
+import EjercicioColas26 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicios2-6.tsx";
+import EjercicioColas27 from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicio2-7.tsx";
 
+
+import PruebasAleatoriedad from "./modules/conceptos/pruebasAleatoriedad/PruebasAleatoriedad.tsx";
+import TeoriaColas from "./modules/conceptos/teoriaColas/TeoriaColas.tsx";
+
+//Ejercicios Interactivos
+import EjerciciosInteractivos from "./modules/conceptos/EjerciciosInteractivos/Inicio.tsx";
+import EjercicioColaInteractivo from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioColasSerie.tsx";
+import EjercicioMultiservidor from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioColaMultiservidor.tsx"
+import EjercicioParking from "./modules/conceptos/EjerciciosInteractivos/colas/ejercicioParking.tsx";
 // Importamos las distribuciones
 import TriangularDistribution from "./core/distributions/TriangularDistribution/MetodosDistribucionTriangular.tsx"; // Usa el LCG que hicimos antes
 import PoissonDistribution from "./core/distributions/PoissonDistribution/PoissonDistribution.tsx";
 import ExponentialDistribution from "./core/distributions/ExponentialDistribution/ExponentialDistribution.tsx";
 import BernoullyDistribution from "./core/distributions/BernoullyDistribution.tsx";
 import UniformDistribution from "./core/distributions/UniformDistribution/UniformDistribution.tsx";
+import NormalDistribution from "./core/distributions/NormalDistribution/NormalDistribution.tsx";
+import BinomialDistribution from "./core/distributions/BinomialDistribution/BinomialDistribution.tsx";
 
 //ejercicios de simulacion
 // Simulación
 import AplicacionIndex from "./modules/simulacion/aplicacion/AplicacionIndex";
+import ComposicionView from "./modules/simulacion/ComposicionView";
 import { LayoutAplicacion } from "./modules/simulacion/utils/LayoutAplicacion";
 import SimulacionEjercicio1 from "./modules/simulacion/aplicacion/Ejercicio1.tsx";
 import SimulacionEjercicio2 from "./modules/simulacion/aplicacion/Ejercicio2.tsx";
@@ -27,6 +51,7 @@ import SimulacionEjercicio6 from "./modules/simulacion/aplicacion/Ejercicio6.tsx
 import SimulacionEjercicio7 from "./modules/simulacion/aplicacion/Ejercicio7.tsx";
 
 
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,12 +60,30 @@ export default function AppRoutes() {
 
       <Route path="/" element={<Home />} />
       <Route path="/conceptos/variables-aleatorias" element={<ConceptosHome />} />
-      
       <Route path="/conceptos/variables-aleatorias/introduccion" element={<ConceptosVariablesAleatorias />} />
-
       <Route path="/conceptos/variables-aleatorias/discretas" element={<VariablesDiscretas />} />
-
       <Route path="/conceptos/variables-aleatorias/continuas" element={<VariablesContinuas />} />
+      <Route path="/conceptos/funciones/pdf" element={<FuncionPDF />} />
+      <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
+//Ejercicios
+      <Route path="/conceptos/ejercicios-interactivos" element={<EjerciciosInteractivos />} />
+      <Route path="/conceptos/ejercicios-interactivos/composicion" element={<EjercicicioComposicion1 />} />
+      <Route path="/conceptos/ejercicios/rechazo" element={<EjercicicioRechazo1 />} />
+      <Route path="/conceptos/ejercicios/rechazo2" element={<EjercicicioRechazo2 />} />
+      <Route path="/conceptos/ejercicios/colas-renta-autos" element={<EjercicioColas24 />} />
+      <Route path="/conceptos/ejercicios/interferencia-flecha" element={<EjercicioColas25 />} />
+      <Route path="/conceptos/ejercicios/politicas-inventario" element={<EjercicioColas26 />} />
+      <Route path="/conceptos/ejercicios/mantenimiento-componentes" element={<EjercicioColas27 />} />
+      <Route path="/conceptos/ejercicios-interactivos/colas-serie" element={<EjercicioColaInteractivo />} />
+      <Route path="/conceptos/ejercicios-interactivos/multiservidor" element={<EjercicioMultiservidor />} />
+      <Route path="/conceptos/ejercicios-interactivos/parking" element={<EjercicioParking />} />
+
+
+      <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />
+      <Route path="/conceptos/teoria-colas" element={<TeoriaColas />} />
+      <Route path="/simulacion/composicion" element={<ComposicionView />} />
+
+      
       
       {/* Rutas Específicas para Distribuciones */}
       <Route path="/distribuciones/continuas/triangular" element={<TriangularDistribution onCerrar={() => {}} />} />
@@ -52,10 +95,13 @@ export default function AppRoutes() {
       <Route path="/distribuciones/continuas/uniforme" element={<UniformDistribution />} />
 
       <Route path="/distribuciones/continuas/exponencial" element={<ExponentialDistribution />} />
+
+      <Route path="/distribuciones/continuas/normal" element={<NormalDistribution />} />
+
+      <Route path="/distribuciones/discretas/binomial" element={<BinomialDistribution />} />
       
             {/* Simulación */}
       <Route path="/simulacion/aplicacion" element={<AplicacionIndex />} />
-
 
       <Route path="/simulacion/aplicacion/ejercicio-1" element={ <LayoutAplicacion> <SimulacionEjercicio1 /> </LayoutAplicacion> } />
 

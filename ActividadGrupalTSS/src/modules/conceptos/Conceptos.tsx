@@ -1,148 +1,127 @@
 ﻿import { Link } from 'react-router-dom';
-import { BookOpen, Layers, TrendingUp} from 'lucide-react';
+import { BookOpen, ChevronRight, GraduationCap, Lightbulb } from 'lucide-react';
+// Importamos los datos del archivo que creamos arriba
+import { sections } from './variablesAleatorias/data/conceptos.data.ts';
 
 export default function Conceptos() {
-  const sections = [
-    {
-      id: 1,
-      title: 'Variables Aleatorias',
-      icon: Layers,
-      color: 'blue',
-      topics: [
-        {
-          name: 'Introducción a Variables Aleatorias',
-          path: '/conceptos/variables-aleatorias/introduccion',
-          description: '¿Qué son? Ejemplos y notación básica'
-        },
-        {
-          name: 'Variables Aleatorias Discretas',
-          path: '/conceptos/variables-aleatorias/discretas',
-          description: 'Valores contables y función de masa de probabilidad'
-        },
-        {
-          name: 'Variables Aleatorias Continuas',
-          path: '/conceptos/variables-aleatorias/continuas',
-          description: 'Valores en intervalos y función de densidad'
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: 'Funciones de Probabilidad',
-      icon: TrendingUp,
-      color: 'green',
-      topics: [
-        {
-          name: 'Función de Densidad (PDF/PMF)',
-          path: '/conceptos/funciones/pdf',
-          description: 'Distribución de probabilidades y propiedades'
-        },
-        {
-          name: 'Función de Distribución Acumulada (CDF)',
-          path: '/conceptos/funciones/cdf',
-          description: 'Probabilidad acumulada y relación con PDF'
-        }
-      ]
-    }
-  ];
 
-  const colorClasses = {
+  // Objeto de configuración de estilos según el color
+  const themeStyles: any = {
     blue: {
       bg: 'bg-blue-50',
-      border: 'border-blue-200',
+      border: 'border-blue-100',
       text: 'text-blue-900',
-      icon: 'text-blue-600',
-      hover: 'hover:bg-blue-100'
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      button: 'hover:bg-blue-600 hover:text-white border-blue-200 text-blue-700',
+      accent: 'bg-blue-500'
     },
-    green: {
-      bg: 'bg-green-50',
-      border: 'border-green-200',
-      text: 'text-green-900',
-      icon: 'text-green-600',
-      hover: 'hover:bg-green-100'
+    emerald: {
+      bg: 'bg-emerald-50',
+      border: 'border-emerald-100',
+      text: 'text-emerald-900',
+      iconBg: 'bg-emerald-100',
+      iconColor: 'text-emerald-600',
+      button: 'hover:bg-emerald-600 hover:text-white border-emerald-200 text-emerald-700',
+      accent: 'bg-emerald-500'
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50/50 p-6 md:p-10">
+      <div className="max-w-6xl mx-auto space-y-10">
         
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-8 border-2 border-gray-200">
-          <div className="flex items-center gap-4 mb-4">
-            <BookOpen size={40} className="text-blue-600" />
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Conceptos Fundamentales
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Fundamentos de Variables Aleatorias y Distribuciones de Probabilidad
-              </p>
+        {/* --- HEADER AMIGABLE --- */}
+        <div className="relative overflow-hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-10">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold uppercase tracking-wider mb-4">
+              <GraduationCap size={16} />
+              Módulo Teórico
             </div>
-          </div>
-          
-          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mt-6">
-            <p className="text-sm text-gray-700">
-              <strong>Objetivo:</strong> Comprender los conceptos fundamentales de variables aleatorias, 
-              sus tipos (discretas y continuas), y las funciones que las describen (PDF, CDF). 
-              Estos conocimientos son la base para generar distribuciones y realizar simulaciones.
+            <h1 className="text-4xl font-extrabold text-slate-800 mb-4">
+              Conceptos Fundamentales
+            </h1>
+            <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
+              Antes de empezar a simular, necesitamos entender el "idioma" de la probabilidad. 
+              Aquí aprenderás las bases para modelar el comportamiento aleatorio de un sistema.
             </p>
           </div>
+          {/* Decoración de fondo */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-yellow-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-blue-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
         </div>
 
-        {/* Secciones */}
-        {sections.map((section) => {
-          const colors = colorClasses[section.color as keyof typeof colorClasses];
-          const Icon = section.icon;
-          
-          return (
-            <div key={section.id} className={`bg-white rounded-lg shadow-lg p-6 border-2 ${colors.border}`}>
-              <div className="flex items-center gap-3 mb-4">
-                <Icon size={32} className={colors.icon} />
-                <h2 className={`text-2xl font-bold ${colors.text}`}>
-                  {section.id}. {section.title}
-                </h2>
-              </div>
+        {/* --- SECCIONES DE APRENDIZAJE --- */}
+        <div className="grid gap-8">
+          {sections.map((section) => {
+            const theme = themeStyles[section.color] || themeStyles.blue;
+            const Icon = section.icon;
+            
+            return (
+              <section key={section.id} className="relative">
+                
+                {/* Título de la Sección */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`p-3 rounded-xl ${theme.iconBg} ${theme.iconColor} shadow-sm`}>
+                    <Icon size={28} strokeWidth={2} />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-800">{section.title}</h2>
+                    <p className="text-slate-500 text-sm">{section.description}</p>
+                  </div>
+                </div>
 
-              <div className="space-y-3">
-                {section.topics.map((topic, idx) => (
-                  <Link
-                    key={idx}
-                    to={topic.path}
-                    className={`block p-4 ${colors.bg} rounded-lg border ${colors.border} ${colors.hover} transition-colors`}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <h3 className={`font-bold ${colors.text} mb-1`}>
-                          {section.id}.{idx + 1} {topic.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {topic.description}
-                        </p>
-                      </div>
-                      <div className={`text-2xl font-bold ${colors.text} opacity-50`}>
-                        →
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+                {/* Grid de Temas (Cards) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {section.topics.map((topic, idx) => (
+                    <Link
+                      key={idx}
+                      to={topic.path}
+                      className="group relative flex flex-col bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                    >
+                      {/* Borde superior de color */}
+                      <div className={`absolute top-0 left-0 w-full h-1 ${theme.accent} opacity-0 group-hover:opacity-100 transition-opacity`}></div>
 
-        {/* Footer informativo */}
-        <div className="bg-gray-100 rounded-lg p-6 border border-gray-300">
-          <h3 className="font-bold text-gray-800 mb-3">Ruta de Aprendizaje Sugerida:</h3>
-          <ol className="space-y-2 text-sm text-gray-700">
-            <li><strong>1.1</strong> Comienza entendiendo qué es una variable aleatoria</li>
-            <li><strong>1.2-1.3</strong> Aprende la diferencia entre discretas y continuas</li>
-            <li><strong>2.1</strong> Comprende cómo se describen con funciones de densidad</li>
-            <li><strong>2.2</strong> Domina la función de distribución acumulada</li>
-          </ol>
-          <p className="text-xs text-gray-500 mt-4">
-            Estos conceptos te prepararán para generar distribuciones en el módulo siguiente.
-          </p>
+                      <div className="flex justify-between items-start mb-3">
+                        <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide bg-slate-100 text-slate-500 group-hover:bg-slate-800 group-hover:text-yellow-400 transition-colors`}>
+                          {topic.badge}
+                        </span>
+                        <div className="text-slate-300 group-hover:text-slate-600 transition-colors">
+                          <BookOpen size={18} />
+                        </div>
+                      </div>
+
+                      <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
+                        {topic.name}
+                      </h3>
+                      
+                      <p className="text-sm text-slate-500 mb-6 grow leading-relaxed">
+                        {topic.description}
+                      </p>
+
+                      <div className={`mt-auto flex items-center justify-between text-sm font-semibold border-t border-slate-100 pt-4 ${theme.text}`}>
+                        <span>Explorar tema</span>
+                        <ChevronRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        {/* --- AYUDA CONTEXTUAL --- */}
+        <div className="bg-indigo-900 rounded-2xl p-6 md:p-8 text-white flex flex-col md:flex-row gap-6 items-center shadow-lg">
+          <div className="p-4 bg-indigo-800/50 rounded-full">
+            <Lightbulb size={32} className="text-yellow-400" />
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h4 className="text-lg font-bold mb-1">¿Por qué aprender esto?</h4>
+            <p className="text-indigo-200 text-sm leading-relaxed">
+              Las simulaciones por computadora se basan en generar números aleatorios que siguen estas reglas. Si no entiendes la diferencia entre una <strong>PDF</strong> y una <strong>CDF</strong>, será difícil crear simuladores precisos más adelante.
+            </p>
+          </div>
         </div>
 
       </div>

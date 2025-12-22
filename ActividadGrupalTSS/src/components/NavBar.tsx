@@ -1,24 +1,50 @@
-﻿import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Home, BookOpen, BarChart3, PlayCircle, HelpCircle, 
-  ChevronDown, Activity, TrendingUp, FlaskConical, BookCheck, Dice6, GamepadDirectional
+import {
+  Activity,
+  BarChart3,
+  BookCheck,
+  BookOpen,
+  ChevronDown,
+  Dice6,
+  FlaskConical,
+  GamepadDirectional,
+  HelpCircle,
+  Home,
+  PlayCircle,
+  TrendingUp,
 } from "lucide-react";
+
 
 export default function NavBar() {
   const location = useLocation();
   
-  const [isDistOpen, setIsDistOpen] = useState(location.pathname.includes("distribuciones"));
-  const [isSimOpen, setIsSimOpen] = useState(location.pathname.includes("simulacion"));
-  const [isConceptosOpen, setIsConceptosOpen] = useState(location.pathname.includes("conceptos"));
-
-  const isActive = (path: string) => location.pathname === path;
+  // Definir las condiciones de "activo" primero
   const isParentActive = location.pathname.includes("/distribuciones");
   const isSimParentActive = location.pathname.includes("/simulacion");
+  const isConceptosActive = location.pathname.includes("/conceptos");
+
+  const [isDistOpen, setIsDistOpen] = useState(isParentActive);
+  const [isSimOpen, setIsSimOpen] = useState(isSimParentActive);
+  const [isConceptosOpen, setIsConceptosOpen] = useState(isConceptosActive);
+
+  const isActive = (path: string) => location.pathname === path;
+  
+  // Mantener los menús abiertos cuando estamos en sus rutas
+  useEffect(() => {
+    if (isConceptosActive && !isConceptosOpen) {
+      setIsConceptosOpen(true);
+    }
+    if (isParentActive && !isDistOpen) {
+      setIsDistOpen(true);
+    }
+    if (isSimParentActive && !isSimOpen) {
+      setIsSimOpen(true);
+    }
+  }, [isConceptosActive, isParentActive, isSimParentActive, isConceptosOpen, isDistOpen, isSimOpen, location.pathname]);
 
   return (
-    // En NavBar.tsx
-<nav className="fixed left-0 top-0 h-screen w-80 bg-slate-800 text-white shadow-2xl flex flex-col overflow-y-auto z-50 sidebar-scroll">
+    <nav className="fixed left-0 top-0 h-screen w-80 bg-slate-800 text-white shadow-2xl flex flex-col overflow-y-auto z-50 sidebar-scroll">
       {/* Header */}
       <div className="px-6 py-8 border-b border-slate-700 bg-slate-900">
         <h1 className="text-lg font-bold leading-tight tracking-wide text-yellow-500">
@@ -38,34 +64,48 @@ export default function NavBar() {
         </li>
 
         {/* CONCEPTOS */}
-<li>
-  <button 
-    onClick={() => setIsConceptosOpen(!isConceptosOpen)}
-    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all hover:bg-slate-700 ${isConceptosOpen ? "bg-slate-700" : ""}`}
-  >
-    <div className="flex items-center gap-4">
-      <BookOpen size={20} />
-      <span>Conceptos</span>
-    </div>
-    {/* Agregamos la flecha con rotación dinámica */}
-    <ChevronDown size={16} className={`transition-transform duration-300 ${isConceptosOpen ? "rotate-180" : "rotate-0"}`} />
-  </button>
+        <li>
+          <button 
+            onClick={() => setIsConceptosOpen(!isConceptosOpen)}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${isConceptosActive ? "bg-slate-700 text-yellow-300" : "hover:bg-slate-700"}`}
+          >
+            <div className="flex items-center gap-4">
+              <BookOpen size={20} />
+              <span>Conceptos</span>
+            </div>
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isConceptosOpen ? "rotate-180" : "rotate-0"}`} />
+          </button>
 
-  <div className={`grid transition-all duration-300 ease-in-out ${isConceptosOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
-    <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
-      <li>
-        <Link to="/conceptos/variables-aleatorias" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/variables-aleatorias") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-          <Dice6 size={16} /> Variables Aleatorias
-        </Link>
-      </li>
-      <li>
-        <Link to="/conceptos/ejercicios" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/ejercicios") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-          <GamepadDirectional size={16} /> Ejercicios Interactivos
-        </Link>
-      </li>
-    </ul>
-  </div>
-</li>
+          <div className={`grid transition-all duration-300 ease-in-out ${isConceptosOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
+            <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
+              <li>
+                <Link to="/conceptos/variables-aleatorias" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${location.pathname.includes("/conceptos/variables-aleatorias") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Dice6 size={16} /> Variables Aleatorias
+                </Link>
+              </li>
+              <li>
+                <Link to="/conceptos/ejercicios-interactivos" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${location.pathname.includes("/conceptos/ejercicios") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <GamepadDirectional size={16} /> Ejercicios Interactivos
+                </Link>
+              </li>
+              <li>
+                <Link to="/conceptos/pruebas-aleatoriedad" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/pruebas-aleatoriedad") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Activity size={16} /> Pruebas de Aleatoriedad
+                </Link>
+              </li>
+              <li>
+                <Link to="/conceptos/teoria-colas" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/conceptos/teoria-colas") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <BarChart3 size={16} /> Teoría de Colas
+                </Link>
+              </li>
+              <li>
+                <Link to="/simulacion/composicion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/composicion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <FlaskConical size={16} /> Método de Composición
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
 
         {/* --- SECCIÓN: DISTRIBUCIONES --- */}
         <li>
@@ -77,11 +117,9 @@ export default function NavBar() {
               <BarChart3 size={20} />
               <span>Distribuciones</span>
             </div>
-            {/* Animación de rotación en el icono */}
             <ChevronDown size={16} className={`transition-transform duration-300 ${isDistOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
-          {/* Sub-menú con Animación de Deslizamiento */}
           <div className={`grid transition-all duration-300 ease-in-out ${isDistOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
             <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
               <li><p className="px-4 py-1 text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Continuas</p></li>
@@ -95,10 +133,16 @@ export default function NavBar() {
                   <TrendingUp size={16} /> Uniforme
                 </Link>
               </li>
-                 <li>
+              <li>
                 <Link to="/distribuciones/continuas/exponencial" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/exponencial") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <TrendingUp size={16} />
                   Exponencial
+                </Link>
+              </li>
+              <li>
+                <Link to="/distribuciones/continuas/normal" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/continuas/normal") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <TrendingUp size={16} />
+                  Normal
                 </Link>
               </li>
 
@@ -107,13 +151,18 @@ export default function NavBar() {
                 <Link to="/distribuciones/discretas/poisson" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/poisson") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <Activity size={16} /> Poisson
                 </Link>
-
-                 <li>
+              </li>
+              <li>
                 <Link to="/distribuciones/discretas/bernoulli" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/bernoulli") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
                   <Activity size={16} />
                   Bernoulli
                 </Link>
               </li>
+              <li>
+                <Link to="/distribuciones/discretas/binomial" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/distribuciones/discretas/binomial") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                  <Activity size={16} />
+                  Binomial
+                </Link>
               </li>
             </ul>
           </div>
@@ -121,7 +170,7 @@ export default function NavBar() {
 
         {/* --- SECCIÓN: SIMULACIÓN --- */}
         <li>
-          <button 
+          <button
             onClick={() => setIsSimOpen(!isSimOpen)}
             className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${isSimParentActive ? "bg-slate-700 text-yellow-300" : "hover:bg-slate-700"}`}
           >
@@ -132,22 +181,28 @@ export default function NavBar() {
             <ChevronDown size={16} className={`transition-transform duration-300 ${isSimOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
-          {/* Sub-menú con Animación de Deslizamiento */}
           <div className={`grid transition-all duration-300 ease-in-out ${isSimOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"}`}>
             <ul className="overflow-hidden ml-4 space-y-1 border-l-2 border-slate-600 pl-2">
               <li>
-                <Link to="/simulacion/aplicacion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/aplicacion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                <Link
+                  to="/simulacion/aplicacion"
+                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/aplicacion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}
+                >
                   <FlaskConical size={16} /> Ejercicios Aplicación
                 </Link>
               </li>
               <li>
-                <Link to="/simulacion/teoricos" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
+                <Link
+                  to="/simulacion/teoricos"
+                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}
+                >
                   <BookCheck size={16} /> Ejercicios Teóricos
                 </Link>
               </li>
             </ul>
           </div>
         </li>
+        {/* ------------------------------------------- */}
 
         {/* AYUDA */}
         <li>

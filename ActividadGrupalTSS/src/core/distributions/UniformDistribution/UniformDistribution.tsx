@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import { useLCG } from '../../random/useLCG'; // Tu hook existente
 import { DistributionChart } from '../utils/DistributionChart';
 import { SimulationTable } from '../utils/SimulationTable';
+import { ExplicacionUniforme } from './ExplicacionUniforme';
 
 interface UniformRow {
   u: number;
@@ -97,6 +98,7 @@ const UniformSimulation: React.FC = () => {
         
         {/* Columna Izquierda: Teoría y Controles */}
         <div className="lg:col-span-1 space-y-6">
+          <ExplicacionUniforme />
           
           {/* NUEVA TARJETA: Contexto Matemático Completo */}
           <div className="bg-gray-50 p-5 rounded border border-gray-200 text-sm shadow-sm">
