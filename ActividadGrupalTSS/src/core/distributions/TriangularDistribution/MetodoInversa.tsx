@@ -59,8 +59,6 @@ export default function MetodoInversa() {
   };
 
   const calcularInversaF1 = (r: number): number => {
-    const a = parseFloat(limiteInf1);
-    const b = parseFloat(limiteSup1);
     const valor = 54 * r - 27;
     return 3 + calcularRaizCubica(valor);
   };
@@ -68,7 +66,6 @@ export default function MetodoInversa() {
   const calcularInversaF2 = (r: number): number => {
     const b = parseFloat(limiteSup1);
     const c = parseFloat(limiteSup2);
-    const valor = 1 - ((c - b) * Math.sqrt(1 - r));
     return c - ((c - b) * Math.sqrt(1 - r));
   };
 
@@ -493,7 +490,7 @@ export default function MetodoInversa() {
             <h3 className="text-xl font-bold mb-4">Tabla de Resultados</h3>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
-                <thead className="bg-blue-600 text-white">
+                <thead className="bg-gray-200">
                   <tr>
                     <th className="border p-3">N°</th>
                     <th className="border p-3">Valor R</th>

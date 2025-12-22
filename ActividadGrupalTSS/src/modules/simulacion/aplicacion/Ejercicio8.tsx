@@ -111,7 +111,6 @@ export default function Ejercicio8() {
   };
 
   const simular = () => {
-    const rng = createLCG(seed);
     const resultadosTemp: ResultadoEquipo[] = [];
 
     for (let n = 1; n <= 3; n++) {
