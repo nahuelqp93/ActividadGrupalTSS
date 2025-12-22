@@ -38,13 +38,6 @@ export const categorias: Categoria[] = [
         distribucion: 'Triangular'
       },
       {
-        nombre: 'Método de Composición',
-        descripcion: 'Descomposición de una distribución compleja en sub-distribuciones más simples.',
-        ruta: '/conceptos/ejercicios-interactivos/composicion',
-        metodo: 'Composición',
-        distribucion: 'Triangular (2 partes)'
-      },
-      {
         nombre: 'Método de Rechazo',
         descripcion: 'Algoritmo de Aceptación-Rechazo usando una función envolvente mayorante.',
         ruta: '/conceptos/ejercicios/rechazo',

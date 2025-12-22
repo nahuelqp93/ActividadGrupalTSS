@@ -10,10 +10,6 @@ import VariablesDiscretas from "./modules/conceptos/variablesAleatorias/Discreta
 import VariablesContinuas from "./modules/conceptos/variablesAleatorias/Continuas.tsx";
 import FuncionCDF from "./modules/conceptos/variablesAleatorias/funciones/CDF.tsx";
 import FuncionPDF from "./modules/conceptos/variablesAleatorias/funciones/PDF.tsx";
-//Conceptos ejericicios
-import EjercicicioComposicion1 from "./modules/conceptos/EjerciciosInteractivos/composicion/composicion1.tsx";
-
-
 import PruebasAleatoriedad from "./modules/conceptos/pruebasAleatoriedad/PruebasAleatoriedad.tsx";
 import TeoriaColas from "./modules/conceptos/teoriaColas/TeoriaColas.tsx";
 
@@ -63,7 +59,6 @@ export default function AppRoutes() {
       <Route path="/conceptos/funciones/cdf" element={<FuncionCDF />} />
 //Ejercicios
       <Route path="/conceptos/ejercicios-interactivos" element={<EjerciciosInteractivos />} />
-      <Route path="/conceptos/ejercicios-interactivos/composicion" element={<EjercicicioComposicion1 />} />
 
 
       <Route path="/conceptos/pruebas-aleatoriedad" element={<PruebasAleatoriedad />} />
