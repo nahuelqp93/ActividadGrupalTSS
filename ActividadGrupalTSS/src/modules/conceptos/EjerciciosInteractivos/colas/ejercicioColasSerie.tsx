@@ -1,7 +1,77 @@
 import { useState } from 'react';
-import {  BookOpen, Calculator, Users, Play } from 'lucide-react';
+import {  BookOpen, Calculator, Users, Play, HelpCircle, ArrowRight} from 'lucide-react';
 import { BlockMath} from 'react-katex';
 import 'katex/dist/katex.min.css';
+import { Link } from 'react-router-dom';
+
+interface DistributionInfo {
+  name: string;
+  formula: string;
+  description: string;
+  link: string;
+  color: string; // 'blue' | 'green' | 'purple'
+}
+
+const DistributionCard = ({ 
+  info, 
+  children 
+}: { 
+  info: DistributionInfo, 
+  children: React.ReactNode 
+}) => {
+  // Mapas de colores para manejar estilos dinámicos de Tailwind
+  const colors: any = {
+    blue:   { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', icon: 'text-blue-500', hoverBorder: 'group-hover:border-blue-400' },
+    green:  { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', icon: 'text-green-500', hoverBorder: 'group-hover:border-green-400' },
+    purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', icon: 'text-purple-500', hoverBorder: 'group-hover:border-purple-400' },
+  };
+
+  const style = colors[info.color];
+
+  return (
+    <div className={`relative group p-4 rounded-lg border transition-all duration-300 ${style.bg} ${style.border} ${style.hoverBorder} hover:shadow-md`}>
+      
+      {/* 1. Encabezado de la Tarjeta */}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className={`font-bold text-sm ${style.text}`}>{info.name}</h3>
+        
+        {/* 2. El Disparador (Icono ?) */}
+        <div className="relative">
+          <HelpCircle size={18} className={`${style.icon} cursor-help opacity-70 hover:opacity-100 transition-opacity`} />
+          
+          {/* 3. El Popover (Tarjeta Flotante) - Se muestra con group-hover del padre o hover propio */}
+          <div className="absolute right-0 top-6 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 p-4 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto text-left">
+            
+            {/* Contenido del Popover */}
+            <div className="mb-3">
+              <h4 className="text-slate-900 font-bold text-sm mb-1">{info.name}</h4>
+              <p className="text-xs text-slate-500 mb-2">{info.description}</p>
+              <div className="bg-slate-50 rounded p-2 text-xs text-slate-800 border border-slate-100">
+                <BlockMath math={info.formula} />
+              </div>
+            </div>
+
+            {/* Botón Ver Más */}
+            <Link 
+              to={info.link}
+              className={`flex items-center gap-1 text-xs font-bold ${style.text} hover:underline mt-2`}
+            >
+              Ver lección completa <ArrowRight size={12} />
+            </Link>
+
+            {/* Triangulito decorativo arriba */}
+            <div className="absolute -top-2 right-1 w-4 h-4 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. El contenido original de la tarjeta (parámetros) */}
+      <div className="space-y-2 text-xs relative z-0">
+        {children}
+      </div>
+    </div>
+  );
+};
 
 interface IteracionCola {
   i: number;
@@ -228,65 +298,87 @@ export default function EjercicioColasSerie() {
         </div>
 
         {/* Datos del Problema */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-          <h2 className="text-lg font-bold text-slate-800 mb-4">Parámetros del Sistema</h2>
-          
-          <div className="grid md:grid-cols-3 gap-4">
-            {/* Llegadas */}
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-bold text-blue-900 mb-3 text-sm">Llegadas (Poisson)</h3>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Tasa (λ):</span>
-                  <span className="font-bold">{lambdaLlegadas} clientes/hora</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Tasa por minuto:</span>
-                  <span className="font-bold">{lambdaPorMinuto.toFixed(4)}/min</span>
-                </div>
-              </div>
-              <div className="mt-3 p-2 bg-white rounded text-xs">
-                <BlockMath math="T_{llegada} = -\frac{\ln(R_1)}{\lambda}" />
-              </div>
-            </div>
+        {/* Datos del Problema */}
+<div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+  <h2 className="text-lg font-bold text-slate-800 mb-4">Parámetros del Sistema</h2>
+  
+  <div className="grid md:grid-cols-3 gap-4">
+    
+    {/* TARJETA 1: LLEGADAS (POISSON) */}
+    <DistributionCard
+      info={{
+        name: "Llegadas (Poisson)",
+        color: "blue",
+        formula: "P(x) = \\frac{e^{-\\lambda}\\lambda^x}{x!}", // Fórmula de Poisson
+        description: "Modela el número de eventos (llegadas) que ocurren en un intervalo de tiempo fijo.",
+        link: "/distribuciones/discretas/poisson"
+      }}
+    >
+      <div className="flex justify-between">
+        <span className="text-slate-600">Tasa (λ):</span>
+        <span className="font-bold">{lambdaLlegadas} clientes/hora</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600">Tasa por minuto:</span>
+        <span className="font-bold">{lambdaPorMinuto.toFixed(4)}/min</span>
+      </div>
+      <div className="mt-3 p-2 bg-white/60 rounded text-xs">
+        <span className="text-slate-500 block mb-1">Generador (Exponencial):</span>
+        <BlockMath math="T_{llegada} = -\frac{\ln(R_1)}{\lambda}" />
+      </div>
+    </DistributionCard>
 
-            {/* Estación 1 */}
-            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-              <h3 className="font-bold text-green-900 mb-3 text-sm">Estación 1 (Exponencial)</h3>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Media (μ):</span>
-                  <span className="font-bold">{mediaServicio1} minutos</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Distribución:</span>
-                  <span className="font-bold">Exponencial</span>
-                </div>
-              </div>
-              <div className="mt-3 p-2 bg-white rounded text-xs">
-                <BlockMath math="T_{servicio1} = -\mu \ln(R_2)" />
-              </div>
-            </div>
+    {/* TARJETA 2: ESTACIÓN 1 (EXPONENCIAL) */}
+    <DistributionCard
+      info={{
+        name: "Servicio (Exponencial)",
+        color: "green",
+        formula: "f(x) = \\mu e^{-\\mu x}", // PDF Exponencial
+        description: "Describe el tiempo entre eventos en un proceso de Poisson (tiempo de servicio).",
+        link: "/distribuciones/continuas/exponencial"
+      }}
+    >
+      <div className="flex justify-between">
+        <span className="text-slate-600">Media (μ):</span>
+        <span className="font-bold">{mediaServicio1} minutos</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600">Distribución:</span>
+        <span className="font-bold">Exponencial</span>
+      </div>
+      <div className="mt-3 p-2 bg-white/60 rounded text-xs">
+        <span className="text-slate-500 block mb-1">Generador:</span>
+        <BlockMath math="T_{serv1} = -\mu \ln(R_2)" />
+      </div>
+    </DistributionCard>
 
-            {/* Estación 2 */}
-            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-              <h3 className="font-bold text-purple-900 mb-3 text-sm">Estación 2 (Uniforme)</h3>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Límite inferior:</span>
-                  <span className="font-bold">{limInfServicio2} minuto</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Límite superior:</span>
-                  <span className="font-bold">{limSupServicio2} minutos</span>
-                </div>
-              </div>
-              <div className="mt-3 p-2 bg-white rounded text-xs">
-                <BlockMath math="T_{servicio2} = a + (b-a) \cdot R_3" />
-              </div>
-            </div>
-          </div>
-        </div>
+    {/* TARJETA 3: ESTACIÓN 2 (UNIFORME) */}
+    <DistributionCard
+      info={{
+        name: "Servicio (Uniforme)",
+        color: "purple",
+        formula: "f(x) = \\frac{1}{b-a}", // PDF Uniforme
+        description: "Todos los intervalos de la misma longitud tienen la misma probabilidad.",
+        link: "/distribuciones/continuas/uniforme"
+      }}
+    >
+      <div className="flex justify-between">
+        <span className="text-slate-600">Límite inferior (a):</span>
+        <span className="font-bold">{limInfServicio2} minuto</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-slate-600">Límite superior (b):</span>
+        <span className="font-bold">{limSupServicio2} minutos</span>
+      </div>
+      <div className="mt-3 p-2 bg-white/60 rounded text-xs">
+        <span className="text-slate-500 block mb-1">Generador:</span>
+        <BlockMath math="T_{serv2} = a + (b-a) R_3" />
+      </div>
+    </DistributionCard>
+
+  </div>
+</div>
+        
 
         {/* Pasos de la Simulación */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
