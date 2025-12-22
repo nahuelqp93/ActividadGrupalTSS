@@ -43,36 +43,67 @@ export const categorias: Categoria[] = [
         ruta: '/conceptos/ejercicios/rechazo',
         metodo: 'Rechazo',
         distribucion: 'Variable Arbitraria'
+      },
+      {
+        nombre: 'Método de Rechazo (Caso 2)',
+        descripcion: 'Algoritmo de Aceptación-Rechazo con función lineal decreciente.',
+        ruta: '/conceptos/ejercicios/rechazo2',
+        metodo: 'Rechazo',
+        distribucion: 'Función Mixta'
       }
     ]
   },
   {
     id: 2,
-    titulo: 'Modelado de Sistemas de Colas',
-    descripcion: 'Simulación de eventos discretos para analizar cuellos de botella y tiempos de espera.',
+    titulo: 'Aplicaciones de Simulacion',
+    descripcion: 'Simulación de eventos discretos.',
     icon: Users,
     theme: 'emerald',
     ejercicios: [
       {
         nombre: 'Colas en Serie',
         descripcion: 'Flujo secuencial con llegadas Poisson y tiempos de servicio heterogéneos.',
-        ruta: '/conceptos/ejercicios/colas-serie',
+        ruta: '/conceptos/ejercicios-interactivos/colas-serie',
         tipo: 'Serie',
         configuracion: '2 Estaciones'
       },
       {
         nombre: 'Sistema Multi-servidor',
         descripcion: 'Banco con cola única y múltiples servidores trabajando en paralelo.',
-        ruta: '/conceptos/ejercicios/multiservidor',
+        ruta: '/conceptos/ejercicios-interactivos/multiservidor',
         tipo: 'Paralelo',
         servidores: '3 Cajeros'
       },
       {
         nombre: 'Capacidad Limitada',
         descripcion: 'Sistema con rechazo de clientes por saturación de espacio (Parking).',
-        ruta: '/conceptos/ejercicios/capacidad-limitada',
+        ruta: '/conceptos/ejercicios-interactivos/parking',
         tipo: 'Bloqueo',
         capacidad: '6 Lugares'
+      },
+      {
+        nombre: 'Renta de Autos',
+        descripcion: 'Determinar el número óptimo de autos a comprar mediante simulación.',
+        ruta: '/conceptos/ejercicios/colas-renta-autos',
+        tipo: 'Optimización',
+      },
+      {
+        nombre: 'Interferencia Flecha-Cojinete',
+        descripcion: 'Calcular la probabilidad de interferencia en un ensamble usando distribuciones normales.',
+        ruta: '/conceptos/ejercicios/interferencia-flecha',
+        tipo: 'Control de Calidad',
+      },
+      {
+        nombre: 'Políticas de Inventario',
+        descripcion: 'Comparar dos estrategias de reabastecimiento para identificar la mas economica.',
+        ruta: '/conceptos/ejercicios/politicas-inventario',
+        tipo: 'Optimización',
+      },
+      {
+        nombre: 'Políticas de Mantenimiento',
+        descripcion: 'Determinar la política más económica para reemplazo de componentes electrónicos.',
+        ruta: '/conceptos/ejercicios/mantenimiento-componentes',
+        tipo: 'Optimización',
       }
     ]
   }
