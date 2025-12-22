@@ -3,6 +3,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import { useLCG } from '../../random/useLCG';
 import { DistributionChart } from '../utils/DistributionChart';
+import { ExplicacionPoisson } from './InteractivePoisson';
 
 
 interface PoissonRow {
@@ -117,6 +118,12 @@ const PoissonSimulation: React.FC = () => {
         
         {/* COLUMNA IZQUIERDA: Contexto Matemático y Controles */}
         <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-6">
+           {/* ... Tus controles existentes ... */}
+           
+           {/* AGREGAR AQUÍ LA EXPLICACIÓN */}
+           <ExplicacionPoisson /> 
+        </div>
           
           {/* TARJETA DE CONTEXTO TEÓRICO */}
           <div className="bg-gray-50 p-5 rounded border border-gray-200 text-sm shadow-sm">
