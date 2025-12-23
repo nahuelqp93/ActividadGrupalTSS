@@ -49,6 +49,8 @@ import SimulacionEjercicio4 from "./modules/simulacion/aplicacion/Ejercicio4.tsx
 import SimulacionEjercicio5 from "./modules/simulacion/aplicacion/Ejercicio5.tsx";
 import SimulacionEjercicio6 from "./modules/simulacion/aplicacion/Ejercicio6.tsx";
 import SimulacionEjercicio7 from "./modules/simulacion/aplicacion/Ejercicio7.tsx";
+import SimulacionEjercicio8 from "./modules/simulacion/aplicacion/Ejercicio8.tsx";
+import SimulacionEjercicio9 from "./modules/simulacion/aplicacion/Ejercicio9.tsx";
 
 
 
@@ -116,6 +118,11 @@ export default function AppRoutes() {
       <Route path="/simulacion/aplicacion/ejercicio-6" element={ <LayoutAplicacion> <SimulacionEjercicio6 /> </LayoutAplicacion> } />
 
       <Route path="/simulacion/aplicacion/ejercicio-7" element={ <LayoutAplicacion> <SimulacionEjercicio7 /> </LayoutAplicacion> } />
+
+      <Route path="/simulacion/aplicacion/ejercicio-8" element={ <LayoutAplicacion> <SimulacionEjercicio8 /> </LayoutAplicacion> } />
+
+      <Route path="/simulacion/aplicacion/ejercicio-9" element={ <LayoutAplicacion> <SimulacionEjercicio9 /> </LayoutAplicacion> } />
+
       <Route path="/ayuda" element={<Ayuda />} />
     </Routes>
   );

@@ -98,11 +98,6 @@ export default function NavBar() {
                   <BarChart3 size={16} /> Teoría de Colas
                 </Link>
               </li>
-              <li>
-                <Link to="/simulacion/composicion" className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/composicion") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}>
-                  <FlaskConical size={16} /> Método de Composición
-                </Link>
-              </li>
             </ul>
           </div>
         </li>

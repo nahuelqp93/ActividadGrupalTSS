@@ -9,6 +9,8 @@ const ejercicios = [
   '/simulacion/aplicacion/ejercicio-5',
   '/simulacion/aplicacion/ejercicio-6',
   '/simulacion/aplicacion/ejercicio-7',
+  '/simulacion/aplicacion/ejercicio-8',
+  '/simulacion/aplicacion/ejercicio-9',
 ];
 
 export function LayoutAplicacion({ children }: { children: React.ReactNode }) {
