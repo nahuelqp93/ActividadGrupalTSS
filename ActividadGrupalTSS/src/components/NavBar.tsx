@@ -3,13 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import {
   Activity,
   BarChart3,
-  BookCheck,
   BookOpen,
   ChevronDown,
   Dice6,
   FlaskConical,
   GamepadDirectional,
-  HelpCircle,
   Home,
   PlayCircle,
   TrendingUp,
