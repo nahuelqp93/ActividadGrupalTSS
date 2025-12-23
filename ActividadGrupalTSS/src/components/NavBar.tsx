@@ -186,26 +186,10 @@ export default function NavBar() {
                   <FlaskConical size={16} /> Ejercicios Aplicación
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/simulacion/teoricos"
-                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition-all ${isActive("/simulacion/teoricos") ? "bg-yellow-500/20 text-yellow-300" : "text-slate-300 hover:text-white hover:bg-slate-700"}`}
-                >
-                  <BookCheck size={16} /> Ejercicios Teóricos
-                </Link>
-              </li>
             </ul>
           </div>
         </li>
         {/* ------------------------------------------- */}
-
-        {/* AYUDA */}
-        <li>
-          <Link to="/ayuda" className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive("/ayuda") ? "bg-yellow-500 text-slate-900 font-bold" : "hover:bg-slate-700"}`}>
-            <HelpCircle size={20} />
-            <span>Ayuda</span>
-          </Link>
-        </li>
       </ul>
     </nav>
   );
