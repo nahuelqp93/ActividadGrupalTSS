@@ -132,7 +132,6 @@ export default function MetodoInversa() {
     const maxX = Math.max(maxX1, maxX2);
     const rangoX = maxX - minX;
 
-    let minY = 0;
     let maxY = 0;
     const numSamples = 200;
 
