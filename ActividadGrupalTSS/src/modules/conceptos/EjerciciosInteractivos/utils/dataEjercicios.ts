@@ -50,7 +50,13 @@ export const categorias: Categoria[] = [
         ruta: '/conceptos/ejercicios/rechazo2',
         metodo: 'Rechazo',
         distribucion: 'Función Mixta'
-      }
+      } ,{
+        nombre: 'Método de Composición',
+        descripcion: 'Descomposición de una distribución compleja en sub-distribuciones más simples.',
+        ruta: '/conceptos/ejercicios-interactivos/composicion',
+        metodo: 'Composición',
+        distribucion: 'Triangular (2 partes)'
+      },
     ]
   },
   {
