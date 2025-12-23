@@ -42,15 +42,6 @@ export default function GraficoDistribucion({ a, b, c, mostrarAreas = true }: Gr
 
   const puntos = generarPuntos();
 
-  // Datos para segmento 1 (área azul)
-  const puntosArea1 = puntos.filter(p => p.x >= 0 && p.x <= a);
-  
-  // Datos para segmento 2 (área verde)
-  const puntosArea2 = puntos.filter(p => p.x > a && p.x <= b);
-  
-  // Datos para segmento 3 (área roja)
-  const puntosArea3 = puntos.filter(p => p.x > b && p.x <= c);
-
   const chartData = {
     labels: puntos.map(p => p.x.toFixed(1)),
     datasets: [
